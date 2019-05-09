@@ -1,0 +1,18 @@
+{
+    "name": "perfectneeds/seo-multi-lang-bundle",
+    "description": "Seo Bundle for Multi languages websites",
+    "keywords": ["Seo Bundle"],
+    "homepage": "http://perfectneeds.github.com",
+    "type": "library",
+    "require": {
+        "php": "^5.5.9 || ^7.0",
+        "symfony/framework-bundle": " ^3.4",
+        "vm5/entity-translations-bundle": "^2.0"
+    },
+    "authors": [
+        {
+            "name": "Peter Nassef",
+            "email": "peter.nassef@gmail.com"
+        }
+    ]
+}
