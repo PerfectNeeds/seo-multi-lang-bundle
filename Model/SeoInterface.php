@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Model;
+namespace PN\SeoBundle\Model;
 
 interface SeoInterface {
 

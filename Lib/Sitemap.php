@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Lib;
+namespace PN\SeoBundle\Lib;
 
 /**
  * Sitemap

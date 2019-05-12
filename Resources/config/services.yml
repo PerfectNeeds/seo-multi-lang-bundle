@@ -8,17 +8,17 @@ services:
         # if you need to do this, you can override this setting on individual services
         public: true
         
-    PNSeoBundle\Twig\:
+    PN\SeoBundle\Twig\:
         public: false
         resource: '../../Twig/*'
-    PNSeoBundle\Form\:
+    PN\SeoBundle\Form\:
         public: false
         resource: '../../Form/*'
-#    PNSeoBundle\Service\:
+#    PN\SeoBundle\Service\:
 #        resource: '../../Service/*'
     seo:
-        class:        PNSeoBundle\Service\SeoService
+        class:        PN\SeoBundle\Service\SeoService
         arguments:    ['@doctrine.orm.default_entity_manager','@router', '@service_container']
     seo_form_type:
-        class:        PNSeoBundle\Service\SeoFormTypeService
+        class:        PN\SeoBundle\Service\SeoFormTypeService
         arguments:    ['@service_container']

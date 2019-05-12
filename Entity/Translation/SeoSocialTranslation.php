@@ -1,10 +1,10 @@
 <?php
 
-namespace PNSeoBundle\Entity\Translation;
+namespace PN\SeoBundle\Entity\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
 use VM5\EntityTranslationsBundle\Model\EditableTranslation;
-use PNLocaleBundle\Model\TranslationEntity;
+use PN\LocaleBundle\Model\TranslationEntity;
 
 /**
  * @ORM\Entity
@@ -36,14 +36,14 @@ class SeoSocialTranslation extends TranslationEntity implements EditableTranslat
     /**
      * @var
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="PNSeoBundle\Entity\SeoSocial", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="PN\SeoBundle\Entity\SeoSocial", inversedBy="translations")
      */
     protected $translatable;
 
     /**
      * @var Language
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="PNLocaleBundle\Entity\Language")
+     * @ORM\ManyToOne(targetEntity="PN\LocaleBundle\Entity\Language")
      */
     protected $language;
 

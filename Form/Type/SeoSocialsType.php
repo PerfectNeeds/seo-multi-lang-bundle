@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Form\Type;
+namespace PN\SeoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,8 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use PNSeoBundle\Entity\SeoSocial;
-use PNSeoBundle\Form\SeoSocialType;
+use PN\SeoBundle\Entity\SeoSocial;
+use PN\SeoBundle\Form\SeoSocialType;
 
 class SeoSocialsType extends AbstractType {
 

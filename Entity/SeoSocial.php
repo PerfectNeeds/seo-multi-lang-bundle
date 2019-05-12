@@ -1,16 +1,16 @@
 <?php
 
-namespace PNSeoBundle\Entity;
+namespace PN\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use VM5\EntityTranslationsBundle\Model\Translatable;
-use PNLocaleBundle\Model\LocaleTrait;
+use PN\LocaleBundle\Model\LocaleTrait;
 
 /**
  * SeoSocial
  *
  * @ORM\Table(name="seo_social")
- * @ORM\Entity(repositoryClass="PNSeoBundle\Repository\SeoSocialRepository")
+ * @ORM\Entity(repositoryClass="PN\SeoBundle\Repository\SeoSocialRepository")
  */
 class SeoSocial implements Translatable {
 
@@ -67,7 +67,7 @@ class SeoSocial implements Translatable {
     private $socialNetwork;
 
     /**
-     * @ORM\OneToMany(targetEntity="PNSeoBundle\Entity\Translation\SeoSocialTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PN\SeoBundle\Entity\Translation\SeoSocialTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
      */
     protected $translations;
 
@@ -178,11 +178,11 @@ class SeoSocial implements Translatable {
     /**
      * Set seo
      *
-     * @param \PNSeoBundle\Entity\Seo $seo
+     * @param \PN\SeoBundle\Entity\Seo $seo
      *
      * @return SeoSocial
      */
-    public function setSeo(\PNSeoBundle\Entity\Seo $seo = null) {
+    public function setSeo(\PN\SeoBundle\Entity\Seo $seo = null) {
         $this->seo = $seo;
 
         return $this;
@@ -191,7 +191,7 @@ class SeoSocial implements Translatable {
     /**
      * Get seo
      *
-     * @return \PNSeoBundle\Entity\Seo
+     * @return \PN\SeoBundle\Entity\Seo
      */
     public function getSeo() {
         return $this->seo;

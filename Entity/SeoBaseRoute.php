@@ -1,8 +1,8 @@
 <?php
 
-namespace PNSeoBundle\Entity;
+namespace PN\SeoBundle\Entity;
 
-use PNServiceBundle\Model\DateTimeTrait;
+use PN\ServiceBundle\Model\DateTimeTrait;
 use PN\Utils\General;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table("seo_base_route")
- * @ORM\Entity(repositoryClass="PNSeoBundle\Repository\SeoBaseRouteRepository")
+ * @ORM\Entity(repositoryClass="PN\SeoBundle\Repository\SeoBaseRouteRepository")
  * @UniqueEntity("entityName",message="This entity name is used before.")
  */
 class SeoBaseRoute {

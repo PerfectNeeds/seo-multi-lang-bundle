@@ -1,8 +1,8 @@
 <?php
 
-namespace PNSeoBundle\Entity;
+namespace PN\SeoBundle\Entity;
 
-use PNServiceBundle\Model\DateTimeTrait;
+use PN\ServiceBundle\Model\DateTimeTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table("redirect_404")
- * @ORM\Entity(repositoryClass="PNSeoBundle\Repository\Redirect404Repository")
+ * @ORM\Entity(repositoryClass="PN\SeoBundle\Repository\Redirect404Repository")
  */
 class Redirect404 {
 

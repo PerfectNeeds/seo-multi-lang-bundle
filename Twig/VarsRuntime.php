@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Twig;
+namespace PN\SeoBundle\Twig;
 
 use Twig\Extension\RuntimeExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,7 +24,7 @@ class VarsRuntime implements RuntimeExtensionInterface {
             $entityName = (new \ReflectionClass($entity))->getShortName();
             $baseRoute = \PN\Utils\General::fromCamelCaseToUnderscore($entityName);
 
-            $seoBaseRoute = new \PNSeoBundle\Entity\SeoBaseRoute();
+            $seoBaseRoute = new \PN\SeoBundle\Entity\SeoBaseRoute();
             $seoBaseRoute->setEntityName($entityName);
             $seoBaseRoute->setBaseRoute($baseRoute);
             $seoBaseRoute->setCreator("System by twig Extension");

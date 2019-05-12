@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Form;
+namespace PN\SeoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use PNSeoBundle\Form\Translation\SeoSocialTranslationType;
+use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 
 class SeoSocialType extends AbstractType {
 
@@ -32,7 +32,7 @@ class SeoSocialType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => \PNSeoBundle\Entity\SeoSocial::class
+            'data_class' => \PN\SeoBundle\Entity\SeoSocial::class
         ));
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace PNSeoBundle\Controller\Administration;
+namespace PN\SeoBundle\Controller\Administration;
 
-use PNSeoBundle\Entity\SeoPage;
-use PNSeoBundle\Form\SeoPageType;
+use PN\SeoBundle\Entity\SeoPage;
+use PN\SeoBundle\Form\SeoPageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;

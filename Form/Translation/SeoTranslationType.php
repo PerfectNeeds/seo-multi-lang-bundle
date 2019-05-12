@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Form\Translation;
+namespace PN\SeoBundle\Form\Translation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,7 +47,7 @@ class SeoTranslationType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => \PNSeoBundle\Entity\Translation\SeoTranslation::class
+            'data_class' => \PN\SeoBundle\Entity\Translation\SeoTranslation::class
         ));
     }
 

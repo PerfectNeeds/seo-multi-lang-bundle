@@ -1,12 +1,12 @@
 <?php
 
-namespace PNSeoBundle\Controller\Administration;
+namespace PN\SeoBundle\Controller\Administration;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
-use PNSeoBundle\Entity\Redirect404;
-use PNSeoBundle\Form\Redirect404Type;
+use PN\SeoBundle\Entity\Redirect404;
+use PN\SeoBundle\Form\Redirect404Type;
 
 /**
  * Redirect404 controller.

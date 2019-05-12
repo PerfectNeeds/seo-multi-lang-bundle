@@ -1,12 +1,12 @@
 <?php
 
-namespace PNSeoBundle\Service;
+namespace PN\SeoBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
-use PNSeoBundle\Entity\Seo;
-use PNSeoBundle\Entity\Translation\SeoTranslation;
-use PNSeoBundle\Entity\SeoBaseRoute;
+use PN\SeoBundle\Entity\Seo;
+use PN\SeoBundle\Entity\Translation\SeoTranslation;
+use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\Utils\General;
 
 class SeoFormTypeService {

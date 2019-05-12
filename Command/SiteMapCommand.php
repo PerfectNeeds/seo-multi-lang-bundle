@@ -1,14 +1,14 @@
 <?php
 
-namespace PNSeoBundle\Command;
+namespace PN\SeoBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use PNServiceBundle\Lib\UploadPath;
-use PNSeoBundle\Lib\Sitemap;
+use PN\ServiceBundle\Lib\UploadPath;
+use PN\SeoBundle\Lib\Sitemap;
 
 class SiteMapCommand extends ContainerAwareCommand {
 

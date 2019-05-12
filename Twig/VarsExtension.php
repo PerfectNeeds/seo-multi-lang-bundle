@@ -1,11 +1,11 @@
 <?php
 
-namespace PNSeoBundle\Twig;
+namespace PN\SeoBundle\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\TwigFunction;
-use PNSeoBundle\Twig\VarsRuntime;
+use PN\SeoBundle\Twig\VarsRuntime;
 
 class VarsExtension extends AbstractExtension {
 

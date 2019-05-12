@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\DependencyInjection;
+namespace PN\SeoBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

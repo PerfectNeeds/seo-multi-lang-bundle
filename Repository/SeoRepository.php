@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Repository;
+namespace PN\SeoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

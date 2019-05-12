@@ -1,13 +1,13 @@
 <?php
 
-namespace PNSeoBundle\Controller\Administration;
+namespace PN\SeoBundle\Controller\Administration;
 
-use PNSeoBundle\Form\SeoBaseRouteType;
+use PN\SeoBundle\Form\SeoBaseRouteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
-use PNSeoBundle\Entity\SeoBaseRoute;
+use PN\SeoBundle\Entity\SeoBaseRoute;
 use Symfony\Component\HttpFoundation\Request;
-use PNServiceBundle\Service\CommonFunctionService;
+use PN\ServiceBundle\Service\CommonFunctionService;
 
 /**
  * Seobaseroute controller.

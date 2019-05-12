@@ -1,9 +1,9 @@
 <?php
 
-namespace PNSeoBundle\Entity;
+namespace PN\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PNServiceBundle\Model\DateTimeTrait;
+use PN\ServiceBundle\Model\DateTimeTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="seo_page")
- * @ORM\Entity(repositoryClass="PNSeoBundle\Repository\SeoPageRepository")
+ * @ORM\Entity(repositoryClass="PN\SeoBundle\Repository\SeoPageRepository")
  */
 class SeoPage
 {
@@ -32,7 +32,7 @@ class SeoPage
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="\PNSeoBundle\Entity\Seo", inversedBy="seoPage", cascade={"persist", "remove" })
+     * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", inversedBy="seoPage", cascade={"persist", "remove" })
      */
     protected $seo;
 
@@ -72,10 +72,10 @@ class SeoPage
     /**
      * Set seo
      *
-     * @param \PNSeoBundle\Entity\Seo $seo
+     * @param \PN\SeoBundle\Entity\Seo $seo
      * @return SeoPage
      */
-    public function setSeo(\PNSeoBundle\Entity\Seo $seo = null)
+    public function setSeo(\PN\SeoBundle\Entity\Seo $seo = null)
     {
         $this->seo = $seo;
 
@@ -85,7 +85,7 @@ class SeoPage
     /**
      * Get seo
      *
-     * @return \PNSeoBundle\Entity\Seo
+     * @return \PN\SeoBundle\Entity\Seo
      */
     public function getSeo()
     {

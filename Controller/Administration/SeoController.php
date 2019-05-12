@@ -1,12 +1,12 @@
 <?php
 
-namespace PNSeoBundle\Controller\Administration;
+namespace PN\SeoBundle\Controller\Administration;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use PNSeoBundle\Entity\Seo;
+use PN\SeoBundle\Entity\Seo;
 
 /**
  * Seo controller.

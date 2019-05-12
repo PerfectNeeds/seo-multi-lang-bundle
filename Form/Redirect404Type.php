@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Form;
+namespace PN\SeoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -18,7 +18,7 @@ class Redirect404Type extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'PNSeoBundle\Entity\Redirect404'
+            'data_class' => 'PN\SeoBundle\Entity\Redirect404'
         ));
     }
 

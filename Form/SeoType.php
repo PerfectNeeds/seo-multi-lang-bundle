@@ -1,6 +1,6 @@
 <?php
 
-namespace PNSeoBundle\Form;
+namespace PN\SeoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,10 +9,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotNull;
-use PNSeoBundle\Form\Type\SeoSocialsType;
+use PN\SeoBundle\Form\Type\SeoSocialsType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
-use PNSeoBundle\Form\Translation\SeoTranslationType;
+use PN\SeoBundle\Form\Translation\SeoTranslationType;
 use PN\Utils\General;
 
 class SeoType extends AbstractType {
@@ -64,7 +64,7 @@ class SeoType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'PNSeoBundle\Entity\Seo',
+            'data_class' => 'PN\SeoBundle\Entity\Seo',
             "label" => false,
             "seoSocials" => []
         ));

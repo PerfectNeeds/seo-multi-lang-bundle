@@ -1,13 +1,13 @@
 <?php
 
-namespace PNSeoBundle\Service;
+namespace PN\SeoBundle\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\Container;
-use PNSeoBundle\Entity\SeoBaseRoute;
-use PNSeoBundle\Entity\Seo;
+use PN\SeoBundle\Entity\SeoBaseRoute;
+use PN\SeoBundle\Entity\Seo;
 use PN\Utils\General;
 
 class SeoService {

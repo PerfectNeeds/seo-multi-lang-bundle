@@ -1,11 +1,11 @@
 <?php
 
-namespace PNSeoBundle\Model;
+namespace PN\SeoBundle\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use VM5\EntityTranslationsBundle\Model\Translatable;
-use PNLocaleBundle\Model\LocaleTrait;
+use PN\LocaleBundle\Model\LocaleTrait;
 
 /**
  * @ORM\MappedSuperclass
@@ -73,12 +73,12 @@ abstract class SeoModel implements Translatable {
     protected $deleted = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="\PNSeoBundle\Entity\SeoSocial", mappedBy="seo", cascade={"persist", "remove" })
+     * @ORM\OneToMany(targetEntity="\PN\SeoBundle\Entity\SeoSocial", mappedBy="seo", cascade={"persist", "remove" })
      */
     protected $seoSocials;
 
     /**
-     * @ORM\OneToMany(targetEntity="PNSeoBundle\Entity\Translation\SeoTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PN\SeoBundle\Entity\Translation\SeoTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
      */
     protected $translations;
 
@@ -287,11 +287,11 @@ abstract class SeoModel implements Translatable {
     /**
      * Add seoSocial
      *
-     * @param \PNSeoBundle\Entity\SeoSocial $seoSocial
+     * @param \PN\SeoBundle\Entity\SeoSocial $seoSocial
      *
      * @return Seo
      */
-    public function addSeoSocial(\PNSeoBundle\Entity\SeoSocial $seoSocial) {
+    public function addSeoSocial(\PN\SeoBundle\Entity\SeoSocial $seoSocial) {
         if (!$this->seoSocials instanceof \Doctrine\ORM\PersistentCollection AND ! $this->seoSocials instanceof \Doctrine\Common\Collections\ArrayCollection) {
             throw new \Exception('Error: Add $this->seoSocials = new \Doctrine\Common\Collections\ArrayCollection() to ' . __CLASS__ . '::__construct() method');
         }
@@ -306,9 +306,9 @@ abstract class SeoModel implements Translatable {
     /**
      * Remove seoSocial
      *
-     * @param \PNSeoBundle\Entity\SeoSocial $seoSocial
+     * @param \PN\SeoBundle\Entity\SeoSocial $seoSocial
      */
-    public function removeSeoSocial(\PNSeoBundle\Entity\SeoSocial $seoSocial) {
+    public function removeSeoSocial(\PN\SeoBundle\Entity\SeoSocial $seoSocial) {
         if (!$this->seoSocials instanceof \Doctrine\ORM\PersistentCollection AND ! $this->seoSocials instanceof \Doctrine\Common\Collections\ArrayCollection) {
             throw new \Exception('Error: Add $this->translations = new \Doctrine\Common\Collections\ArrayCollection() to ' . __CLASS__ . '::__construct() method');
         }
@@ -334,7 +334,7 @@ abstract class SeoModel implements Translatable {
     /**
      * Get seoSocial By Type
      *
-     * @return \PNSeoBundle\Entity\SeoSocial
+     * @return \PN\SeoBundle\Entity\SeoSocial
      */
     public function getSeoSocialByType($type) {
         return $this->getSeoSocials(array($type))->first();
@@ -343,11 +343,11 @@ abstract class SeoModel implements Translatable {
     /**
      * Set seoBaseRoute
      *
-     * @param \PNSeoBundle\Entity\SeoBaseRoute $seoBaseRoute
+     * @param \PN\SeoBundle\Entity\SeoBaseRoute $seoBaseRoute
      *
      * @return Seo
      */
-    public function setSeoBaseRoute(\PNSeoBundle\Entity\SeoBaseRoute $seoBaseRoute = null) {
+    public function setSeoBaseRoute(\PN\SeoBundle\Entity\SeoBaseRoute $seoBaseRoute = null) {
         $this->seoBaseRoute = $seoBaseRoute;
 
         return $this;
@@ -356,7 +356,7 @@ abstract class SeoModel implements Translatable {
     /**
      * Get seoBaseRoute
      *
-     * @return \PNSeoBundle\Entity\SeoBaseRoute
+     * @return \PN\SeoBundle\Entity\SeoBaseRoute
      */
     public function getSeoBaseRoute() {
         return $this->seoBaseRoute;
@@ -365,11 +365,11 @@ abstract class SeoModel implements Translatable {
     /**
      * Set seo
      *
-     * @param \PNSeoBundle\Entity\SeoPage $seoPage
+     * @param \PN\SeoBundle\Entity\SeoPage $seoPage
      *
      * @return Seo
      */
-    public function setSeoPage(\PNSeoBundle\Entity\SeoPage $seoPage = null) {
+    public function setSeoPage(\PN\SeoBundle\Entity\SeoPage $seoPage = null) {
         $this->seoPage = $seoPage;
 
         return $this;
@@ -378,7 +378,7 @@ abstract class SeoModel implements Translatable {
     /**
      * Get seoPage
      *
-     * @return \PNSeoBundle\Entity\SeoPage
+     * @return \PN\SeoBundle\Entity\SeoPage
      */
     public function getSeoPage() {
         return $this->seoPage;
