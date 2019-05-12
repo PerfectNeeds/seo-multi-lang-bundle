@@ -1,0 +1,39 @@
+.seoContent label{
+    width: 100%;
+}
+.seoSnippet{
+    font-family: arial,sans-serif;
+}
+.seoSnippetPreview{
+    padding-bottom: 10px;
+}
+.seoSnippetPreview > .snippetPreviewTitle{
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    overflow: hidden;
+    color: #1a0dab;
+    font-size: 18px;
+    font-weight: normal;
+}
+.seoSnippetPreview > .snippetPreviewLink{
+    font-size: 14px;
+    color: #006621;
+    font-style: normal;
+    word-wrap: break-word;
+}
+
+.seoSnippetPreview > .snippetPreviewMetaDescription{
+    line-height: 1.4;
+    word-wrap: break-word;
+    color: #545454;
+}
+.analysis li{
+    transition: all 1s ease-out;
+}
+.separator{
+    margin: 7px 0;
+    height: 1px;
+    background-color: #00BCD4;
+}

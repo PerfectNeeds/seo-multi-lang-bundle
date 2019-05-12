@@ -1,0 +1,21 @@
+{% set seoBaseRoute = getBaseRoute(entity) %}
+<script>
+    var focusKeywordUrlAjax = '{{ path('fe_check_focus_keyword_ajax') }}';
+    var checkSlugIsUsedUrlAjax = '{{ path('fe_check_slug_ajax') }}';
+    var seoId = {% if entity.seo.id is defined %}'{{ entity.seo.id }}'{% else %}null{% endif %};
+    var seoBaseRouteId = {{ seoBaseRoute.id }};
+    {% if app.environment == 'dev' %}
+        var seoDebug = true;
+    {% else %}
+        var seoDebug = false;
+    {% endif %}
+</script>
+<script src="{{ asset('bundles/seo/pn.seo.js') }}"></script>
+<link href="{{ asset('bundles/seo/pn.style.seo.css') }}" rel="stylesheet" type="text/css" />
+<script>
+    $(document).ready(function () {
+        $('.seo-widget').each(function () {
+            $(this).seoPlugin();
+        });
+    });
+</script>

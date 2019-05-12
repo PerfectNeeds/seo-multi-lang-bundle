@@ -1,0 +1,15 @@
+{
+    "recordsTotal": {{ recordsTotal }},
+    "recordsFiltered": {{ recordsFiltered }},
+    "data": [
+        {% for seoPage in seoPages %}
+            [
+            "{{ seoPage.id }}",
+            "{{ seoPage.title }}",
+            "{% if seoPage.created %}{{ seoPage.created|date('d/m/Y') }}{% else %}--{% endif %}",
+                " <ul class='icons-list'><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='icon-menu9'></i></a><ul class='dropdown-menu dropdown-menu-right'><li><a href='{{ path('seopage_edit',{'id':seoPage.id}) }}'><i class='icon-pencil7'></i> Edit</a></li><li><a href='#' class='delete-btn' data-toggle='modal' data-target='#modal_delete' data-delete='{{ path('seopage_delete',{'id':seoPage.id}) }}'><i class='icon-bin'></i> Remove</a></li></ul></li></ul>"
+
+            ]{% if loop.last == false %},{% endif %}
+        {% endfor %}
+    ]
+}

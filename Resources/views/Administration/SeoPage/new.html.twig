@@ -1,0 +1,32 @@
+{% extends 'adminTemplate/base.html.twig' %}
+{% import 'adminTemplate/macros.html.twig' as macros %}
+{% set page_title %}Create new seo page{% endset %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb-line">
+        <ul class="breadcrumb">
+            <li><a href="{{ path('dashboard') }}"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+            <li><a href="{{ path('seopage_index') }}">Seo pages</a></li>
+            <li class="active">{{ page_title }}</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+
+     {{ form_start(form, {'attr':{"data-toggle":"validator",'novalidate':'novalidate'} }) }}
+    <div class="row">
+        <div class="col-md-12">
+            {% set defaultTwig= include ("@Seo/Administration/SeoPage/new_content.html.twig") %}
+            {{ include ("@Locale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@Seo/Administration/SeoPage/new_trans.html.twig"} ) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('admin/js/ckeditor/ckeditor.js') }}"></script>
+    {% include 'SeoBundle:Administration/Seo:seo.js.html.twig' with {'entity':seoPage} %}
+    <script type="text/javascript" src="{{ asset('admin/js/plugins/forms/validation/validate.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('admin/js/pages/form_validation.js') }}"></script>
+{% endblock javascripts %}

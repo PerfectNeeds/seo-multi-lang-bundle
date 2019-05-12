@@ -1,0 +1,11 @@
+<div class="panel panel-flat">
+    <div class="panel-body">
+        <div class="row">
+            {{ macros.input(form.title) }}
+        </div>
+    </div>
+    <div class="panel-footer">
+        {% include 'adminTemplate/saveAndResetFormFooter.html.twig' %}
+    </div>
+</div>
+{% include '@Seo/Administration/Seo/seo.html.twig' with { 'seoForm':form.seo, 'entity':seoPage } %}

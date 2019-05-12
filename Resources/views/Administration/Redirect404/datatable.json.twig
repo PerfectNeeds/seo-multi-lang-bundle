@@ -1,0 +1,15 @@
+{
+    "recordsTotal": {{ recordsTotal }},
+    "recordsFiltered": {{ recordsFiltered }},
+    "data": [
+        {% for redirect404 in redirect404s %}
+            [
+            "{{ redirect404.from }}",
+            "{{ redirect404.to }}",
+            "{% if redirect404.created %}{{ redirect404.created|date('d/m/Y') }}{% else %}--{% endif %}",
+                " <ul class='icons-list'><li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='icon-menu9'></i></a><ul class='dropdown-menu dropdown-menu-right'><li><a href='{{ path('redirect404_edit',{'id':redirect404.id}) }}'><i class='icon-pencil7'></i> Edit</a></li><li><a href='#' class='delete-btn' data-toggle='modal' data-target='#modal_delete' data-delete='{{ path('redirect404_delete',{'id':redirect404.id}) }}'><i class='icon-bin'></i> Remove</a></li></ul></li></ul>"
+
+            ]{% if loop.last == false %},{% endif %}
+        {% endfor %}
+    ]
+}

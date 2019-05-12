@@ -1,0 +1,4 @@
+parameters:
+    seo_bundle:
+        #google analytics code or null
+        ga_code: null

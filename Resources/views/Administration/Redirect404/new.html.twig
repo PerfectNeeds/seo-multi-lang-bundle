@@ -1,0 +1,35 @@
+{% extends 'adminTemplate/base.html.twig' %}
+{% import 'adminTemplate/macros.html.twig' as macros %}
+{% set page_title %}Create new redirect404{% endset %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb-line">
+        <ul class="breadcrumb">
+            <li><a href="{{ path('dashboard') }}"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+            <li><a href="{{ path('redirect404_index') }}">Redirect 404</a></li>
+            <li class="active">{{ page_title }}</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+
+    {{ form_start(form, {'attr':{'class':'form-validate-jquery','novalidate':'novalidate'}}) }}
+    <div class="panel panel-flat">
+        <div class="panel-body">
+            <div class="row">
+                {{ macros.input(form.from) }}
+                {{ macros.input(form.to) }}
+            </div>
+        </div>
+        <div class="panel-footer">
+            {% include 'adminTemplate/saveAndResetFormFooter.html.twig' %}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('admin/js/plugins/forms/validation/validate.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('admin/js/pages/form_validation.js') }}"></script>
+{% endblock javascripts %}

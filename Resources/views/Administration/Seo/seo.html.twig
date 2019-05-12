@@ -1,0 +1,204 @@
+{% set seoBaseRoute = getBaseRoute(entity) %}
+{% set defaultLocale = getParameter("locale") %}
+{% if locale is not defined %}
+    {% set locale = defaultLocale %}
+{% endif %}
+
+{% if seoBaseRoute != null %}
+    {% set socialNetworks = staticVariable("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial", "socialNetworks") %}
+    <div class="panel panel-flat seo-widget" data-locale="{{ locale }}">
+        <div class="panel-heading">
+            <h6 class="panel-title"><i class="fa fa-circle text-success stateColor"></i> Seo</h6>
+            <div class="heading-elements tabbable">
+                <ul class="nav nav-tabs nav-tabs-bottom">
+                    <li class="active">
+                        <a href="#seo_{{ locale }}_keyword" data-toggle="tab"><i class="icon-stack-check"></i> Keyword</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-share3"></i>
+                            <span class="visible-xs-inline-block position-right"> Social media</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            {% for socialNetwork in socialNetworks %}
+                                <li><a href="#seo_social_{{ locale }}_{{ socialNetwork.type }}" tabindex="-1" data-toggle="tab"><i class="{{ socialNetwork.icon }}"></i> {{ socialNetwork.name }}</a></li>
+                                {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-tab-content tab-content">
+            <div class="tab-pane active has-padding" id="seo_{{ locale }}_keyword">
+                <div class="panel panel-flat border-top-info border-bottom-info">
+                    <div class="panel-heading">
+                        <h6 class="panel-title"><i class="fa fa-eye"></i> Snippet preview</h6>
+                        <div class="heading-elements">
+                            <div class="heading-btn">
+                                <button type="button" class="btn btn-default seoSnippetEditBtn">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        {% if locale != defaultLocale %}
+                            {% set seo_form_locale =seoForm.translations[locale] %}
+                        {% else %}
+                            {% set seo_form_locale =seoForm %}
+                        {% endif %}
+                        <div id="seoSnippet">
+                            <div class="seoSnippetPreview">
+                                <div class="snippetPreviewTitle">
+                                    [PAGE TITLE]
+                                </div>
+                                <div class="snippetPreviewLink">
+                                    {{ app.request.getSchemeAndHttpHost() ~ app.request.getBaseURL() }}/{{ locale }}/{{ seoBaseRoute.baseRoute }}/<span class="snippetPreviewLinkSlug"></span>
+                                </div>
+                                <div class="snippetPreviewMetaDescription">
+                                    Please provide a meta description by editing the snippet below.
+                                </div>
+                            </div>
+                            <div class="separator"></div>
+                            <div class="form-group">
+                                <label for="seoFocusKeyword" class="control-label">Focus Keyword</label>
+                                {{ form_widget(seo_form_locale.focusKeyword,{'attr':{'class':'form-control' ,'placeholder':'Focus Keyword'}}) }}
+
+                            </div>
+                        </div>
+                        <div class="seoSnippetEdit" style="display: none;">
+                            <div class="separator"></div>
+                            {{ form_widget(seo_form_locale.state,{'type':'hidden'}) }}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="seoSnippetEditTitle" class="control-label pull-left">Title</label>
+                                        <span class="label label-default lengthBadge pull-right">
+                                            <span class="length">0</span> / <span class="seoTitleMaxLength">60</span>
+                                        </span>
+                                        {{ form_widget(seo_form_locale.title,{'attr':{'class':'form-control countLength' ,'data-max-length':'60', 'data-preview':'snippetPreviewTitle', 'placeholder':'SEO title'}}) }}
+                                        {{ form_errors(seo_form_locale.title) }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group has-feedback">
+                                        <label for="seoSnippetEditSlug" class="control-label">Slug</label>
+                                        {{ form_widget(seo_form_locale.slug,{'attr':{'class':'form-control' , 'data-preview':'snippetPreviewLinkSlug', 'placeholder':'Slug'}}) }}
+                                        {{ form_errors(seo_form_locale.slug) }}
+                                        <div class="form-control-feedback hidden">
+                                            <i class="icon-spinner2 spinner"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="seoSnippetEditMetaDescription" class="control-label pull-left">
+                                            Meta Description
+                                        </label>
+                                        <span class="label label-default lengthBadge pull-right">
+                                            <span class="length">0</span> / <span class="metaDescriptionMaxLength">160</span>
+                                        </span>
+                                        {{ form_widget(seo_form_locale.metaDescription,{'attr':{'class':'form-control countLength' ,'data-max-length':'160', 'data-preview':'snippetPreviewMetaDescription', 'placeholder':'Meta Description'}}) }}
+                                        {{ form_errors(seo_form_locale.metaDescription) }}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-body border-top-blue">
+                    <div class="panel-heading">
+                        <h6 class="panel-title"><i class="flaticon-list-2"></i> Analysis</h6>
+                    </div>
+                    <ul class="list-feed list-feed-solid analysisList">
+                        <li class="border-danger analysis-1">
+                            No focus keyword was set for this page. If you do not set a focus keyword, no score can be calculated.
+                        </li>
+                        <li class="border-danger analysis-2">
+                            No meta description has been specified. Search engines will display copy from the page instead
+                        </li>
+                        <li class="border-danger analysis-3">
+                            The meta description is under <span class="metaDescriptionMinLength">120</span> characters long. However, up to <span class="metaDescriptionMaxLength">160</span> characters are available.
+                        </li>
+                        <li class="border-danger analysis-4">
+                            The text contains <span class="seoContentCount">0</span> words. This is far below the recommended minimum of <span class="descriptionMinWordsCount">300</span> words. Add more content that is relevant for the topic.
+                        </li>
+                        <li class="border-danger analysis-5">
+                            The focus keyword '<span class="copyFocusKeyword">--</span>' does not appear in the SEO title
+                        </li>
+                        <li class="border-danger analysis-6">
+                            The length of the meta description is sufficient.
+                        </li>
+                        <li class="border-danger analysis-7">
+                            The SEO title contains the focus keyword, at the beginning which is considered to improve rankings.
+                        </li>
+                        <li class="border-warning analysis-8">
+                            The focus keyword does not appear in the URL for this page. If you decide to rename the URL
+                        </li>
+                        <li class="border-danger analysis-9">
+                            You've never used this focus keyword before.
+                        </li>
+                        <li class="border-danger analysis-10">
+                            The page title has a nice length (<span class="titleMaxLength">60</span> characters).
+                        </li>
+                        <li class="border-danger analysis-11">
+                            The focus keyword doesn't appear in the first paragraph of the copy. Make sure the topic is clear immediately.
+                        </li>
+                        <li class="border-danger analysis-12">
+                            The keyword density is <span class="seoDensity">0.00</span>%, which is great; the focus keyword was found <span class="seoDensityTime">0</span> times.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% for socialNetwork in socialNetworks %}
+                {% set seo_socials_form = attribute(seoForm.seoSocials, socialNetwork.type) %}
+
+                {% if locale != defaultLocale %}
+                    {% set seo_socials_form =attribute(seoForm.seoSocials, socialNetwork.type).translations[locale] %}
+                {% endif %}
+                <div class="tab-pane has-padding" id="seo_social_{{ locale }}_{{ socialNetwork.type }}">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="label label-default lengthBadge pull-right">
+                                    <span class="length">0</span> / <span>60</span>
+                                </span>
+                                {{ form_label(seo_socials_form.title, 'Title', { 'label_attr': {'class': 'pull-left'} }) }}
+                                {{ form_widget(seo_socials_form.title) }}
+                                {{ form_errors(seo_socials_form.title) }}
+                                <div class="help-block">If you don't want to use the post title for sharing the post on Facebook but instead want another title there, write it here.</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(seo_socials_form.imageUrl, 'Image url', { 'label_attr': {'class': 'pull-left'} }) }}
+                                {{ form_widget(seo_socials_form.imageUrl) }}
+                                {{ form_errors(seo_socials_form.imageUrl) }}
+                                <div class="help-block">If you want to override the image used on Facebook for this post, add the URL here.</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                {{ form_label(seo_socials_form.description, 'Description', { 'label_attr': {'class': 'pull-left'} }) }}
+                                <span class="label label-default lengthBadge pull-right">
+                                    <span class="length">0</span> / <span>300</span>
+                                </span>
+                                {{ form_widget(seo_socials_form.description) }}
+                                {{ form_errors(seo_socials_form.description) }}
+                                <div class="help-block">If you don't want to use the meta description for sharing the post on {{ socialNetwork.name }} but want another description there, write it here.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="panel-footer">
+            {% include 'adminTemplate/saveAndResetFormFooter.html.twig' %}
+        </div>
+    </div>
+{% else %}
+    <div class="alert bg-danger">
+        <span class="text-semibold">Oh snap!</span> SEO Entity is not found !!
+    </div>
+{% endif %}

@@ -1,0 +1,36 @@
+{#{% set seo = entity.seo %}
+{% use 'SeoBundle:FrontEnd:seo.html.twig' %}#}
+{% block title %}{% spaceless %}{{ seo.title|raw }}{% endspaceless %}{% endblock %}
+{% block metaTag -%}
+    {% spaceless %}
+        {% if seo.metaDescription|trim|length > 0 %}
+            <meta name="description" content="{{ seo.metaDescription|trim }}">
+        {% endif %}
+        {% if seo.metaKeyword|trim|length > 0 %}
+            <meta name="keywords" content="{{ seo.metaKeyword|trim }}">
+        {% endif %}
+        {% for social in seo.seoSocials %}
+            {% if social.socialNetwork == constant("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial::FACEBOOK") %}
+                {% if social.title|trim|length > 0 %}
+                    <meta property="og:title" content="{{ social.title|trim }}">
+                {% endif %}
+                {% if social.description|trim|length > 0 %}
+                    <meta property="og:description" content="{{ social.description|trim }}">
+                {% endif %}
+                {% if social.imageUrl|trim|length > 0 %}
+                    <meta property="og:image" content="{{ social.imageUrl|trim }}">
+                {% endif %}
+            {% elseif social.socialNetwork == constant("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial::TWITTER") %}
+                {% if social.title|trim|length > 0 %}
+                    <meta name="twitter:title" content="{{ social.title|trim }}">
+                {% endif %}
+                {% if social.description|trim|length > 0 %}
+                    <meta name="twitter:description" content="{{ social.description|trim }}">
+                {% endif %}
+                {% if social.imageUrl|trim|length > 0 %}
+                    <meta name="twitter:image" content="{{ social.imageUrl|trim }}">
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
