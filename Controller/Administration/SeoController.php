@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use PN\SeoBundle\Entity\Seo;
+use PN\ServiceBundle\Service\ContainerParameterService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Seo controller.
@@ -15,7 +17,11 @@ use PN\SeoBundle\Entity\Seo;
  */
 class SeoController extends Controller {
 
-    protected $em = null;
+    protected $class = null;
+
+    public function __construct(ContainerInterface $container) {
+        $this->class = $container->getParameter("pn_seo_class");
+    }
 
     /**
      * check that focusKeyword exist only one time
@@ -23,18 +29,17 @@ class SeoController extends Controller {
      * @Route("/check-focus-keyword", name="fe_check_focus_keyword_ajax", methods={"GET"})
      */
     public function checkFocusKeyword(Request $request) {
-
         $seoId = $request->query->get('seoId');
         $focusKeyword = $request->query->get('focusKeyword');
         $em = $this->getDoctrine()->getManager();
         $return = 0;
         if ($seoId == NULL) {
-            $seo = $em->getRepository('PNSeoBundle:Seo')->findBy(array('focusKeyword' => $focusKeyword, 'deleted' => FALSE));
+            $seo = $em->getRepository($this->class)->findBy(array('focusKeyword' => $focusKeyword, 'deleted' => FALSE));
             if (count($seo) > 0) {
                 $return = count($seo);
             }
         } else {
-            $seo = $em->getRepository('PNSeoBundle:Seo')->findByFocusKeywordAndNotId($focusKeyword, $seoId);
+            $seo = $em->getRepository($this->class)->findByFocusKeywordAndNotId($focusKeyword, $seoId);
             if (count($seo) > 0) {
                 $return = count($seo);
             }
@@ -58,11 +63,11 @@ class SeoController extends Controller {
 
         $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->find($seoBaseRouteId);
         if ($seoId == NULL) {
-            $seo = new Seo();
+            $seo = new $this->class();
             $seo->setSlug($slug);
             $entity = $seo;
         } else {
-            $seo = $em->getRepository('PNSeoBundle:Seo')->find($seoId);
+            $seo = $em->getRepository($this->class)->find($seoId);
             $seo->setSlug($slug);
             $entity = $seo->getRelationalEntity();
         }
@@ -74,18 +79,6 @@ class SeoController extends Controller {
             $return = 0;
         }
         return new Response($return);
-
-        if ($seoId == NULL) {
-            $checkSeo = $em->getRepository('PNSeoBundle:Seo')->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
-            if ($checkSeo != null) {
-                $return = 1;
-            }
-        } else {
-            $checkSeo = $em->getRepository('PNSeoBundle:Seo')->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $seoId);
-            if ($checkSeo != null) {
-                $return = 1;
-            }
-        }
     }
 
 }

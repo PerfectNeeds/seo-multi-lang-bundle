@@ -12,8 +12,11 @@ services:
         public: false
         resource: '../../Twig/*'
     PN\SeoBundle\Form\:
-        public: true
+        public: false
         resource: '../../Form/*'
+    PN\SeoBundle\Controller\:
+        public: false
+        resource: '../../Controller/*'
 #    PN\SeoBundle\Service\:
 #        resource: '../../Service/*'
     seo:

@@ -15,14 +15,21 @@ sure you have translator enabled in your config.
 ```yaml
     # app/config/config.yml
 
-    framework:
-        translator: ~
+parameters:
+    # default locale 
+    locale: en 
+    # all locales separated by |
+    app.locales: en|ar| 
+    
+framework:
+    translator: ~
+    default_locale: '%locale%'
 ```
 
 Installation
 ------------
 
-Installation is a quick (I promise!) 7 step process:
+Installation is a quick (I promise!) 6 step process:
 
 1. Download PNSeoBundle using composer
 2. Enable the Bundle in AppKernel
@@ -154,6 +161,13 @@ Add the following configuration to your config.yml file according to which type 
 
 ```ymal
 # app/config/config.yml 
+
+doctrine:
+   orm:
+        # search for the "ResolveTargetEntityListener" class for an article about this
+        resolve_target_entities: 
+            VM5\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
+
 pn_seo:
     seo_class: PN\Bundle\SeoBundle\Entity\Seo
 ```
@@ -161,6 +175,8 @@ pn_seo:
 ### Step 5: Import PNSeoBundle routing files
 
 ```ymal
+# app/config/routing.yml 
+
 pn_seo:
     resource: "@PNSeoBundle/Resources/config/routing.yml"
 ```
@@ -171,3 +187,6 @@ Now that the bundle is configured, the last thing you need to do is update your 
 ```sh
 $ php bin/console doctrine:schema:update --force
 ```
+
+------
+# How to use PNSeoBundle

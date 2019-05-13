@@ -96,7 +96,7 @@ class SeoBaseRoute {
      * @return SeoBaseRoute
      */
     public function setBaseRoute($baseRoute) {
-        $this->baseRoute = $baseRoute;
+        $this->baseRoute = rtrim($baseRoute, "/");
 
         return $this;
     }

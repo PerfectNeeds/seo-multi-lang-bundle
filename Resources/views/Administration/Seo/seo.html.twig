@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if seoBaseRoute != null %}
-    {% set socialNetworks = staticVariable("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial", "socialNetworks") %}
+    {% set socialNetworks = staticVariable("\\PN\\SeoBundle\\Entity\\SeoSocial", "socialNetworks") %}
     <div class="panel panel-flat seo-widget" data-locale="{{ locale }}">
         <div class="panel-heading">
             <h6 class="panel-title"><i class="fa fa-circle text-success stateColor"></i> Seo</h6>
@@ -22,8 +22,10 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             {% for socialNetwork in socialNetworks %}
-                                <li><a href="#seo_social_{{ locale }}_{{ socialNetwork.type }}" tabindex="-1" data-toggle="tab"><i class="{{ socialNetwork.icon }}"></i> {{ socialNetwork.name }}</a></li>
-                                {% endfor %}
+                                <li>
+                                    <a href="#seo_social_{{ locale }}_{{ socialNetwork.type }}" tabindex="-1" data-toggle="tab"><i class="{{ socialNetwork.icon }}"></i> {{ socialNetwork.name }}</a>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </li>
                 </ul>

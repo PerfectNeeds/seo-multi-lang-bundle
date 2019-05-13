@@ -10,7 +10,7 @@
             <meta name="keywords" content="{{ seo.metaKeyword|trim }}">
         {% endif %}
         {% for social in seo.seoSocials %}
-            {% if social.socialNetwork == constant("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial::FACEBOOK") %}
+            {% if social.socialNetwork == constant("\\PN\\SeoBundle\\Entity\\SeoSocial::FACEBOOK") %}
                 {% if social.title|trim|length > 0 %}
                     <meta property="og:title" content="{{ social.title|trim }}">
                 {% endif %}
@@ -20,7 +20,7 @@
                 {% if social.imageUrl|trim|length > 0 %}
                     <meta property="og:image" content="{{ social.imageUrl|trim }}">
                 {% endif %}
-            {% elseif social.socialNetwork == constant("\\PN\\Bundle\\SeoBundle\\Entity\\SeoSocial::TWITTER") %}
+            {% elseif social.socialNetwork == constant("\\PN\\SeoBundle\\Entity\\SeoSocial::TWITTER") %}
                 {% if social.title|trim|length > 0 %}
                     <meta name="twitter:title" content="{{ social.title|trim }}">
                 {% endif %}
