@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use PN\ServiceBundle\Model\DateTimeTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * SeoPage
  *
@@ -14,13 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="seo_page")
  * @ORM\Entity(repositoryClass="PN\SeoBundle\Repository\SeoPageRepository")
  */
-class SeoPage
-{
+class SeoPage {
 
     use DateTimeTrait;
 
-    const SEO_HOME=1;
-    const SEO_CONTACT_US=2;
+    const SEO_HOME = 1;
+    const SEO_CONTACT_US = 2;
 
     /**
      * @var int
@@ -30,11 +28,6 @@ class SeoPage
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", inversedBy="seoPage", cascade={"persist", "remove" })
-     */
-    protected $seo;
 
     /**
      * @var string
@@ -50,8 +43,7 @@ class SeoPage
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
-    {
+    public function updatedTimestamps() {
         $this->setModified(new \DateTime(date('Y-m-d H:i:s')));
 
         if ($this->getCreated() == null) {
@@ -64,34 +56,9 @@ class SeoPage
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
-
-    /**
-     * Set seo
-     *
-     * @param \PN\SeoBundle\Entity\Seo $seo
-     * @return SeoPage
-     */
-    public function setSeo(\PN\SeoBundle\Entity\Seo $seo = null)
-    {
-        $this->seo = $seo;
-
-        return $this;
-    }
-
-    /**
-     * Get seo
-     *
-     * @return \PN\SeoBundle\Entity\Seo
-     */
-    public function getSeo()
-    {
-        return $this->seo;
-    }
-
 
     /**
      * Set title
@@ -100,8 +67,7 @@ class SeoPage
      *
      * @return SeoPage
      */
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
 
         return $this;
@@ -112,9 +78,8 @@ class SeoPage
      *
      * @return string
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
-}
 
+}

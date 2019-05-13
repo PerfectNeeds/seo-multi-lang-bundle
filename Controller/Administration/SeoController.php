@@ -29,12 +29,12 @@ class SeoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $return = 0;
         if ($seoId == NULL) {
-            $seo = $em->getRepository('SeoBundle:Seo')->findBy(array('focusKeyword' => $focusKeyword, 'deleted' => FALSE));
+            $seo = $em->getRepository('PNSeoBundle:Seo')->findBy(array('focusKeyword' => $focusKeyword, 'deleted' => FALSE));
             if (count($seo) > 0) {
                 $return = count($seo);
             }
         } else {
-            $seo = $em->getRepository('SeoBundle:Seo')->findByFocusKeywordAndNotId($focusKeyword, $seoId);
+            $seo = $em->getRepository('PNSeoBundle:Seo')->findByFocusKeywordAndNotId($focusKeyword, $seoId);
             if (count($seo) > 0) {
                 $return = count($seo);
             }
@@ -56,13 +56,13 @@ class SeoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $return = 0;
 
-        $seoBaseRoute = $em->getRepository('SeoBundle:SeoBaseRoute')->find($seoBaseRouteId);
+        $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->find($seoBaseRouteId);
         if ($seoId == NULL) {
             $seo = new Seo();
             $seo->setSlug($slug);
             $entity = $seo;
         } else {
-            $seo = $em->getRepository('SeoBundle:Seo')->find($seoId);
+            $seo = $em->getRepository('PNSeoBundle:Seo')->find($seoId);
             $seo->setSlug($slug);
             $entity = $seo->getRelationalEntity();
         }
@@ -76,12 +76,12 @@ class SeoController extends Controller {
         return new Response($return);
 
         if ($seoId == NULL) {
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
+            $checkSeo = $em->getRepository('PNSeoBundle:Seo')->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
             if ($checkSeo != null) {
                 $return = 1;
             }
         } else {
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $seoId);
+            $checkSeo = $em->getRepository('PNSeoBundle:Seo')->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $seoId);
             if ($checkSeo != null) {
                 $return = 1;
             }

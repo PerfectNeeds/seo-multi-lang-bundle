@@ -3,11 +3,9 @@
 namespace PN\SeoBundle\Entity;
 
 use PN\ServiceBundle\Model\DateTimeTrait;
-use PN\Utils\General;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * SeoBaseRoute
@@ -20,7 +18,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class SeoBaseRoute {
 
     use DateTimeTrait;
-
 
     /**
      * @var integer
@@ -47,19 +44,12 @@ class SeoBaseRoute {
     protected $baseRoute;
 
     /**
-     * @ORM\OneToMany(targetEntity="Seo", mappedBy="seoBaseRoute")
-     */
-    protected $seos;
-
-
-    /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
-    {
+    public function updatedTimestamps() {
         $this->setModified(new \DateTime(date('Y-m-d H:i:s')));
 
         if ($this->getCreated() == null) {
@@ -72,11 +62,9 @@ class SeoBaseRoute {
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
-    
 
     /**
      * Set entityName
@@ -85,8 +73,7 @@ class SeoBaseRoute {
      *
      * @return SeoBaseRoute
      */
-    public function setEntityName($entityName)
-    {
+    public function setEntityName($entityName) {
         $this->entityName = $entityName;
 
         return $this;
@@ -97,8 +84,7 @@ class SeoBaseRoute {
      *
      * @return string
      */
-    public function getEntityName()
-    {
+    public function getEntityName() {
         return $this->entityName;
     }
 
@@ -109,8 +95,7 @@ class SeoBaseRoute {
      *
      * @return SeoBaseRoute
      */
-    public function setBaseRoute($baseRoute)
-    {
+    public function setBaseRoute($baseRoute) {
         $this->baseRoute = $baseRoute;
 
         return $this;
@@ -121,8 +106,7 @@ class SeoBaseRoute {
      *
      * @return string
      */
-    public function getBaseRoute()
-    {
+    public function getBaseRoute() {
         return $this->baseRoute;
     }
 

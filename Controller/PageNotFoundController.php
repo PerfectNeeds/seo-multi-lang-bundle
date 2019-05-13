@@ -15,7 +15,7 @@ class PageNotFoundController extends Controller {
 //            $em = $this->getDoctrine()->getManager();
 //
 //            $currentUrl = $request->getUri();
-//            $entity = $em->getRepository('SeoBundle:Redirect404')->findOneBy(["from" => $currentUrl]);
+//            $entity = $em->getRepository('PNSeoBundle:Redirect404')->findOneBy(["from" => $currentUrl]);
 //            if ($entity) {
 //                return $this->redirect($entity->getTo());
 //            }

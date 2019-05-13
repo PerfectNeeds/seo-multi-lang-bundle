@@ -34,11 +34,6 @@ class SeoSocial implements Translatable {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Seo", inversedBy="seoSocials")
-     */
-    protected $seo;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=true)

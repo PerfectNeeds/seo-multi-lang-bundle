@@ -12,7 +12,7 @@ services:
         public: false
         resource: '../../Twig/*'
     PN\SeoBundle\Form\:
-        public: false
+        public: true
         resource: '../../Form/*'
 #    PN\SeoBundle\Service\:
 #        resource: '../../Service/*'

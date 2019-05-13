@@ -1,0 +1,4 @@
+seo_admin:
+    resource: "@PNSeoBundle/Controller/Administration"
+    type:     annotation
+    prefix:   /admin/seo

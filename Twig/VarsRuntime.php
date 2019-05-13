@@ -19,7 +19,7 @@ class VarsRuntime implements RuntimeExtensionInterface {
         if ($entity == null) {
             throw new Exception("Error: Seo Entity");
         }
-        $seoBaseRoute = $this->em->getRepository('SeoBundle:SeoBaseRoute')->findByEntity($entity, false);
+        $seoBaseRoute = $this->em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($entity, false);
         if (!$seoBaseRoute) {
             $entityName = (new \ReflectionClass($entity))->getShortName();
             $baseRoute = \PN\Utils\General::fromCamelCaseToUnderscore($entityName);

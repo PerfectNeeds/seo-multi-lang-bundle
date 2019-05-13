@@ -7,8 +7,7 @@ use VM5\EntityTranslationsBundle\Model\EditableTranslation;
 use PN\LocaleBundle\Model\TranslationEntity;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="seo_translations")
+ * @ORM\MappedSuperclass
  */
 class SeoTranslation extends TranslationEntity implements EditableTranslation {
 
@@ -52,13 +51,6 @@ class SeoTranslation extends TranslationEntity implements EditableTranslation {
      * @ORM\Column(name="state", type="smallint", nullable=true)
      */
     protected $state;
-
-    /**
-     * @var
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="PN\SeoBundle\Entity\Seo", inversedBy="translations")
-     */
-    protected $translatable;
 
     /**
      * @var Language
