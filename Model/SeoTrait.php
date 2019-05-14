@@ -14,7 +14,7 @@ trait SeoTrait {
     protected $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\PN\SeoBundle\Entity\SeoSocial")
+     * @ORM\ManyToMany(targetEntity="\PN\SeoBundle\Entity\SeoSocial", cascade={"persist", "remove" })
      */
     protected $seoSocials;
 

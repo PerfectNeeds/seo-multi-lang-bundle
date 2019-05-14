@@ -13,15 +13,17 @@ use PN\SeoBundle\Form\Type\SeoSocialsType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
 use PN\SeoBundle\Form\Translation\SeoTranslationType;
-use PN\Utils\General;
+use PN\SeoBundle\Service\SeoFormTypeService;
 
 class SeoType extends AbstractType {
 
     protected $em;
     protected $container;
+    protected $seoClass;
 
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
+        $this->seoClass = $container->getParameter("pn_seo_class");
         $this->em = $container->get("doctrine")->getManager();
     }
 
@@ -53,18 +55,18 @@ class SeoType extends AbstractType {
         $form = $event->getForm();
         $parentEntity = $form->getRoot()->getData();
 
-        $generatedSlug = $this->container->get('seo_form_type')->checkAndGenerateSlug($parentEntity, $seoEntity);
+        $generatedSlug = $this->container->get(SeoFormTypeService::class)->checkAndGenerateSlug($parentEntity, $seoEntity);
         $seoEntity->setSlug($generatedSlug);
 
         if ($seoEntity->getSeoBaseRoute() == null) {
-            $seoBaseRoute = $this->em->getRepository('SeoBundle:SeoBaseRoute')->findByEntity($parentEntity);
+            $seoBaseRoute = $this->em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($parentEntity);
             $seoEntity->setSeoBaseRoute($seoBaseRoute);
         }
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'PN\SeoBundle\Entity\Seo',
+            'data_class' => $this->seoClass,
             "label" => false,
             "seoSocials" => []
         ));

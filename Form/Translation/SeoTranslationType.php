@@ -8,16 +8,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use PN\Utils\General;
+use PN\SeoBundle\Service\SeoFormTypeService;
 
 class SeoTranslationType extends AbstractType {
 
     protected $em;
     protected $container;
+    protected $seoTranslationClass;
 
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
         $this->em = $container->get("doctrine")->getManager();
+        $this->seoTranslationClass = $container->getParameter("pn_seo_translation_class");
     }
 
     /**
@@ -38,7 +40,7 @@ class SeoTranslationType extends AbstractType {
         $form = $event->getForm();
         $locale = $event->getForm()->getConfig()->getName();
         $parentEntity = $form->getRoot()->getData();
-        $generatedSlug = $this->container->get('seo_form_type')->checkAndGenerateSlug($parentEntity, $seoEntity, $locale);
+        $generatedSlug = $this->container->get(SeoFormTypeService::class)->checkAndGenerateSlug($parentEntity, $seoEntity, $locale);
         $seoEntity->getSlug($generatedSlug);
     }
 
@@ -47,7 +49,7 @@ class SeoTranslationType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => \PN\SeoBundle\Entity\Translation\SeoTranslation::class
+            'data_class' => $this->seoTranslationClass
         ));
     }
 

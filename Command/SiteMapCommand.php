@@ -13,6 +13,7 @@ use PN\SeoBundle\Lib\Sitemap;
 class SiteMapCommand extends ContainerAwareCommand {
 
     private $locales = [];
+    private $seoClass;
 
     protected function configure() {
         $this
@@ -23,6 +24,7 @@ class SiteMapCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $em = $this->getContainer()->get('doctrine')->getManager();
+        $this->seoClass = $this->getContainer()->getParameter('pn_seo_class');
 
         $ignoreRouteNames = [
             '_wdt',
@@ -85,7 +87,7 @@ class SiteMapCommand extends ContainerAwareCommand {
                 $sitemap->addItem($sitemapPath, '0.8', 'monthly', 'Today');
             }
         }
-        $entities = $em->getRepository('SeoBundle:Seo')->findBy(['deleted' => FALSE]);
+        $entities = $em->getRepository($this->seoClass)->findBy(['deleted' => FALSE]);
         foreach ($entities as $entity) {
             if ($entity->getSeoBaseRoute() != NULL) {
                 $loc = '/' . $entity->getSeoBaseRoute()->getBaseRoute() . '/' . $entity->getslug();

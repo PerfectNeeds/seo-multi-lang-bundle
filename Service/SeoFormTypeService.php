@@ -13,13 +13,15 @@ class SeoFormTypeService {
 
     public $container;
     public $em;
+    public $seoClass;
     public $defaultLocale;
 
-//    public function __construct(ContainerInterface $container) {
-    public function __construct(Container $container) {
+    public function __construct(ContainerInterface $container) {
+//    public function __construct(Container $container) {
         $this->container = $container;
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->defaultLocale = $this->container->getParameter('locale');
+        $this->seoClass = $this->container->getParameter('pn_seo_class');
     }
 
     public function checkAndGenerateSlug($entity, $seoEntity, $locale = null) {
@@ -29,7 +31,7 @@ class SeoFormTypeService {
         }
 
         $em = $this->em;
-        $seoBaseRoute = $em->getRepository('SeoBundle:SeoBaseRoute')->findByEntity($entity);
+        $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($entity);
 
         if ($locale == null) {
             $locale = $this->defaultLocale;
@@ -58,9 +60,9 @@ class SeoFormTypeService {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $this->defaultLocale);
         if ($entity->getId() == null) { // new
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
+            $checkSeo = $em->getRepository($this->seoClass)->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
         } else { // edit
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId());
+            $checkSeo = $em->getRepository($this->seoClass)->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId());
         }
 
         if ($checkSeo != null) {
@@ -74,9 +76,9 @@ class SeoFormTypeService {
         $slug = $this->getSlug($entity, $seoEntity, $locale);
 
         if ($entity->getId() == null) { // new
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findTranBySlugAndBaseRoute($seoBaseRoute->getId(), $slug, $locale);
+            $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRoute($seoBaseRoute->getId(), $slug, $locale);
         } else { // edit
-            $checkSeo = $em->getRepository('SeoBundle:Seo')->findTranBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId(), $locale);
+            $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId(), $locale);
         }
         if ($checkSeo != null) {
             return true;

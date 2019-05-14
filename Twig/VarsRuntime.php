@@ -40,7 +40,7 @@ class VarsRuntime implements RuntimeExtensionInterface {
             return $str;
         }
 
-        $backLinks = $this->em->getRepository('SeoBundle:BackLink')->findAllByJSON();
+        $backLinks = $this->em->getRepository('PNSeoBundle:BackLink')->findAllByJSON();
 
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);

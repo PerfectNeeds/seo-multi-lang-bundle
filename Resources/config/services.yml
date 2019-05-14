@@ -17,11 +17,7 @@ services:
     PN\SeoBundle\Controller\:
         public: false
         resource: '../../Controller/*'
-#    PN\SeoBundle\Service\:
-#        resource: '../../Service/*'
-    seo:
+    PN\SeoBundle\Service\:
+        resource: '../../Service/*'
+    fe_seo:
         class:        PN\SeoBundle\Service\SeoService
-        arguments:    ['@doctrine.orm.default_entity_manager','@router', '@service_container']
-    seo_form_type:
-        class:        PN\SeoBundle\Service\SeoFormTypeService
-        arguments:    ['@service_container']

@@ -6,9 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use PN\SeoBundle\Entity\Seo;
-use PN\ServiceBundle\Service\ContainerParameterService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use PN\SeoBundle\Service\SeoFormTypeService;
 
 /**
  * Seo controller.
@@ -72,7 +71,7 @@ class SeoController extends Controller {
             $entity = $seo->getRelationalEntity();
         }
 
-        $ifExist = $this->get('seo_form_type')->checkSlugIfExist($seoBaseRoute, $entity, $seo, $locale);
+        $ifExist = $this->get(SeoFormTypeService::class)->checkSlugIfExist($seoBaseRoute, $entity, $seo, $locale);
         if ($ifExist == true) {
             $return = 1;
         } else {

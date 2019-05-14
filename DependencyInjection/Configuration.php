@@ -28,6 +28,10 @@ class Configuration implements ConfigurationInterface {
                 ->isRequired()
                 ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('seo_translation_class')
+                ->isRequired()
+                ->cannotBeEmpty()
+                ->end()
         ;
 
         return $treeBuilder;

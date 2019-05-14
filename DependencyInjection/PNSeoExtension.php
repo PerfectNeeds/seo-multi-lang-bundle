@@ -24,6 +24,7 @@ class PNSeoExtension extends Extension {
 
 
         $container->setParameter('pn_seo_class', $config['seo_class']);
+        $container->setParameter('pn_seo_translation_class', $config['seo_translation_class']);
 
 //        $this->remapParametersNamespaces($config, $container, array(
 //            '' => array(
