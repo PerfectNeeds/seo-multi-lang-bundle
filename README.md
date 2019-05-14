@@ -41,7 +41,7 @@ Installation is a quick (I promise!) 6 step process:
 ### Step 1: Download PNSeoBundle using composer
 Require the bundle with composer:
 ```sh
-$ composer require perfectneeds/seo-multi-lang-bundle "1.*"
+$ composer require perfectneeds/seo-multi-lang-bundle "^1"
 ```
 ### Step 2: Enable the Bundle in AppKernel
 Require the bundle with composer:
