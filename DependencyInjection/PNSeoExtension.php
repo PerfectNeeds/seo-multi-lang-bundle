@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class PNSeoExtension extends Extension {
 
+    private $alias = "pn_seo";
+
     /**
      * {@inheritdoc}
      */
@@ -21,20 +23,16 @@ class PNSeoExtension extends Extension {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-
-
-        $container->setParameter('pn_seo_class', $config['seo_class']);
-        $container->setParameter('pn_seo_translation_class', $config['seo_translation_class']);
-
-//        $this->remapParametersNamespaces($config, $container, array(
-//            '' => array(
-//                'seo_class' => 'pn_seo_class',
-//            ),
-//        ));
+        $this->convertConfigToParameter($container, $config);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('parameters.yml');
+    }
+
+    private function convertConfigToParameter(ContainerBuilder $container, $config) {
+        $container->setParameter($this->alias . '_class', $config['seo_class']);
+        $container->setParameter($this->alias . '_translation_class', $config['seo_translation_class']);
     }
 
 }
