@@ -19,11 +19,6 @@ trait SeoTrait {
     protected $seoSocials;
 
     /**
-     * @ORM\OneToMany(targetEntity="PN\Bundle\SeoBundle\Entity\Translation\SeoTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
-     */
-    protected $translations;
-
-    /**
      * Add seoSocial
      *
      * @param \PN\SeoBundle\Entity\SeoSocial $seoSocial
