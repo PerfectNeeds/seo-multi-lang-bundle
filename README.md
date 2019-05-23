@@ -119,6 +119,10 @@ use PN\SeoBundle\Model\SeoTrait;
 class Seo extends BaseSeo {
 
     use SeoTrait;
+    /**
+     * @ORM\OneToMany(targetEntity="PN\Bundle\SeoBundle\Entity\Translation\SeoTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true)
+     */
+    protected $translations;
     
     public function __construct()
     {
