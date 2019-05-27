@@ -29,19 +29,20 @@ framework:
 Installation
 ------------
 
-Installation is a quick (I promise!) 6 step process:
+Installation is a quick (I promise!) 7 step process:
 
 1. Download PNSeoBundle using composer
 2. Enable the Bundle in AppKernel
 3. Create your Seo class
-4. Configure the PNSeoBundle
-5. Import PNSeoBundle routing
-6. Update your database schema
+4. Create your SeoRepository class
+5. Configure the PNSeoBundle
+6. Import PNSeoBundle routing
+7. Update your database schema
 ------------
 ### Step 1: Download PNSeoBundle using composer
 Require the bundle with composer:
 ```sh
-$ composer require perfectneeds/seo-multi-lang-bundle "^1"
+$ composer require perfectneeds/seo-multi-lang-bundle "~1"
 ```
 ### Step 2: Enable the Bundle in AppKernel
 Require the bundle with composer:
@@ -158,7 +159,25 @@ class SeoTranslation extends BaseSeoTranslation {
 
 }
 ```
-### Step 4: Configure the PNSeoBundle
+### Step 4: Create your SeoRepository class
+You can use this `Repository` to add any custom methods 
+
+```php
+<?php
+// src/PN/Bundle/SeoBundle/Repository/SeoRepository.php
+
+
+namespace PN\Bundle\SeoBundle\Repository;
+
+use PN\SeoBundle\Repository\SeoRepository as BaseSeoRepository;
+
+class SeoRepository extends BaseSeoRepository {
+
+}
+```
+
+
+### Step 5: Configure the PNSeoBundle
 Add the following configuration to your config.yml file according to which type of datastore you are using.
 
 ```ymal
@@ -171,11 +190,13 @@ doctrine:
             VM5\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
 
 pn_seo:
+    # The fully qualified class name (FQCN) of the Seo class which you created in Step 3.
     seo_class: PN\Bundle\SeoBundle\Entity\Seo
+    # The fully qualified class name (FQCN) of the SeoTranslation class which you created in Step 3.
     seo_translation_class: PN\Bundle\SeoBundle\Entity\Translation\SeoTranslation
 ```
 
-### Step 5: Import PNSeoBundle routing files
+### Step 6: Import PNSeoBundle routing files
 
 ```ymal
 # app/config/routing.yml 
@@ -187,7 +208,7 @@ pn_locale:
     resource: "@PNLocaleBundle/Resources/config/routing.yml"
 ```
 
-### Step 6: Update your database schema
+### Step 7: Update your database schema
 Now that the bundle is configured, the last thing you need to do is update your database schema because you have added a new entity, the `Seo` class which you created in Step 3.
 
 ```sh
@@ -331,7 +352,7 @@ DynamicPageController.php
 
 ### Options:
 ##### request:
-**type**: `Request` object
+**type**: `Symfony\Component\HttpFoundation\Request` object
 Instance of Request 
 
 ##### slug:
@@ -353,3 +374,14 @@ So you need to add 2 an empty blocks in `base.html.twig` (**metaTag** and **titl
 {% set seo = dynamicPage.seo %}
 {% use '@PNSeo/FrontEnd/seo.html.twig' %}
 ```
+
+
+Reporting an issue or a feature request
+---------------------------------------
+
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/PerfectNeeds/seo-multi-lang-bundle).
+
+When reporting a bug, it may be a good idea to reproduce it in a basic project
+built using the [Symfony Standard Edition](https://github.com/symfony/symfony-standard)
+to allow developers of the bundle to reproduce the issue by simply cloning it
+and following some steps.
