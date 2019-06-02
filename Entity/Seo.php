@@ -73,7 +73,7 @@ abstract class Seo implements Translatable {
     protected $deleted = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="PN\SeoBundle\Entity\SeoPage")
+     * @ORM\OneToOne(targetEntity="PN\SeoBundle\Entity\SeoPage", mappedBy="seo")
      */
     protected $seoPage;
 

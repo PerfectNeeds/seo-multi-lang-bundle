@@ -188,6 +188,7 @@ doctrine:
         # search for the "ResolveTargetEntityListener" class for an article about this
         resolve_target_entities: 
             VM5\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
+            PN\SeoBundle\Entity\Seo: PN\Bundle\SeoBundle\Entity\Seo
 
 pn_seo:
     # The fully qualified class name (FQCN) of the Seo class which you created in Step 3.

@@ -38,6 +38,11 @@ class SeoPage {
     private $title;
 
     /**
+     * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", inversedBy="seoPage", cascade={"persist", "remove" })
+     */
+    protected $seo;
+
+    /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *
      * @ORM\PrePersist
@@ -80,6 +85,27 @@ class SeoPage {
      */
     public function getTitle() {
         return $this->title;
+    }
+
+    /**
+     * Set seo
+     *
+     * @param \PN\SeoBundle\Entity\Seo $seo
+     * @return SeoPage
+     */
+    public function setSeo(\PN\SeoBundle\Entity\Seo $seo = null) {
+        $this->seo = $seo;
+
+        return $this;
+    }
+
+    /**
+     * Get seo
+     *
+     * @return \PN\Bundle\SeoBundle\Entity\Seo
+     */
+    public function getSeo() {
+        return $this->seo;
     }
 
 }
