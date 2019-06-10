@@ -16,8 +16,8 @@
      {{ form_start(form, {'attr':{"data-toggle":"validator",'novalidate':'novalidate'} }) }}
     <div class="row">
         <div class="col-md-12">
-            {% set defaultTwig= include ("@Seo/Administration/SeoPage/new_content.html.twig") %}
-            {{ include ("@Locale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@Seo/Administration/SeoPage/new_trans.html.twig"} ) }}
+            {% set defaultTwig= include ("@PNSeo/Administration/SeoPage/new_content.html.twig") %}
+            {{ include ("@PNLocale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@Seo/Administration/SeoPage/new_trans.html.twig"} ) }}
         </div>
     </div>
     {{ form_end(form) }}
