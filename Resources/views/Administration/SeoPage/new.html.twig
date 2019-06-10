@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-md-12">
             {% set defaultTwig= include ("@PNSeo/Administration/SeoPage/new_content.html.twig") %}
-            {{ include ("@PNLocale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@Seo/Administration/SeoPage/new_trans.html.twig"} ) }}
+            {{ include ("@PNLocale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@PNSeo/Administration/SeoPage/new_trans.html.twig"} ) }}
         </div>
     </div>
     {{ form_end(form) }}
