@@ -59,7 +59,7 @@ class SeoFormTypeService {
     private function checkSlugIfExistInDefaultLocale(SeoBaseRoute $seoBaseRoute, $entity, $seoEntity) {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $this->defaultLocale);
-        if ($entity->getId() == null) { // new
+        if (!method_exists($entity, "getId") OR $entity->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
         } else { // edit
             $checkSeo = $em->getRepository($this->seoClass)->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId());
