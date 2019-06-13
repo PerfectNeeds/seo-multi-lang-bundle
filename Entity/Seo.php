@@ -90,7 +90,7 @@ abstract class Seo implements Translatable {
     }
 
     public function getRelationalEntity() {
-        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "state", "lastModified", "deleted", "seoSocials", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
+        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "state", "lastModified", "deleted", "seoSocials","translations", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
 
         $allObjects = get_object_vars($this);
         foreach ($allObjects as $objectName => $objectValue) {
