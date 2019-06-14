@@ -3,7 +3,6 @@
 namespace PN\SeoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PN\Utils\SQL;
 
 class BackLinkRepository extends EntityRepository {
 

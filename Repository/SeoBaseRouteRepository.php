@@ -3,8 +3,8 @@
 namespace PN\SeoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PN\Utils\SQL;
-use PN\Utils\Validate;
+use PN\ServiceBundle\Utils\SQL;
+use PN\ServiceBundle\Utils\Validate;
 
 class SeoBaseRouteRepository extends EntityRepository {
 
