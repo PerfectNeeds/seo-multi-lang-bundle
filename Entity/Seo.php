@@ -56,6 +56,13 @@ abstract class Seo implements Translatable {
     protected $metaKeyword;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="meta_tags", type="text" , nullable=true)
+     */
+    protected $metaTags;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="state", type="smallint", nullable=true)
@@ -90,7 +97,7 @@ abstract class Seo implements Translatable {
     }
 
     public function getRelationalEntity() {
-        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "state", "lastModified", "deleted", "seoSocials","translations", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
+        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "state", "lastModified", "deleted", "seoSocials", "translations", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
 
         $allObjects = get_object_vars($this);
         foreach ($allObjects as $objectName => $objectValue) {
@@ -335,6 +342,27 @@ abstract class Seo implements Translatable {
      */
     public function getSeoPage() {
         return $this->seoPage;
+    }
+
+    /**
+     * Set metaTags
+     *
+     * @param string $metaTags
+     * @return SeoTranslation
+     */
+    public function setMetaTags($metaTags) {
+        $this->metaTags = $metaTags;
+
+        return $this;
+    }
+
+    /**
+     * Get metaTags
+     *
+     * @return string
+     */
+    public function getMetaTags() {
+        return !$this->currentTranslation ? $this->metaTags : $this->currentTranslation->getMetaTags();
     }
 
 }

@@ -46,6 +46,13 @@ class SeoTranslation extends TranslationEntity implements EditableTranslation {
     protected $metaKeyword;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="meta_tags", type="text" , nullable=true)
+     */
+    protected $metaTags;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="state", type="smallint", nullable=true)
@@ -189,6 +196,27 @@ class SeoTranslation extends TranslationEntity implements EditableTranslation {
      */
     public function getState() {
         return $this->state;
+    }
+
+    /**
+     * Set metaTags
+     *
+     * @param string $metaTags
+     * @return SeoTranslation
+     */
+    public function setMetaTags($metaTags) {
+        $this->metaTags = $metaTags;
+
+        return $this;
+    }
+
+    /**
+     * Get metaTags
+     *
+     * @return string
+     */
+    public function getMetaTags() {
+        return $this->metaTags;
     }
 
 }

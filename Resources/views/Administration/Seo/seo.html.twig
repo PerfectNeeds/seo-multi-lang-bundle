@@ -45,9 +45,9 @@
 
                     <div class="panel-body">
                         {% if locale != defaultLocale %}
-                            {% set seo_form_locale =seoForm.translations[locale] %}
+                            {% set seo_form_locale = seoForm.translations[locale] %}
                         {% else %}
-                            {% set seo_form_locale =seoForm %}
+                            {% set seo_form_locale = seoForm %}
                         {% endif %}
                         <div id="seoSnippet">
                             <div class="seoSnippetPreview">
@@ -102,6 +102,16 @@
                                         </span>
                                         {{ form_widget(seo_form_locale.metaDescription,{'attr':{'class':'form-control countLength' ,'data-max-length':'160', 'data-preview':'snippetPreviewMetaDescription', 'placeholder':'Meta Description'}}) }}
                                         {{ form_errors(seo_form_locale.metaDescription) }}
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="seoSnippetEditMetaTags" class="control-label pull-left">
+                                            Meta Tags
+                                        </label>
+                                        {{ form_widget(seo_form_locale.metaTags,{'attr':{'class':'form-control', 'placeholder':'Meta Tags'}}) }}
+                                        {{ form_errors(seo_form_locale.metaTags) }}
 
                                     </div>
                                 </div>

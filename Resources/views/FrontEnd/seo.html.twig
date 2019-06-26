@@ -9,6 +9,9 @@
         {% if seo.metaKeyword|trim|length > 0 %}
             <meta name="keywords" content="{{ seo.metaKeyword|trim }}">
         {% endif %}
+        {% if seo.metaTags|trim|length > 0 %}
+            {{ seo.metaTags|raw }}
+        {% endif %}
         {% for social in seo.seoSocials %}
             {% if social.socialNetwork == constant("\\PN\\SeoBundle\\Entity\\SeoSocial::FACEBOOK") %}
                 {% if social.title|trim|length > 0 %}

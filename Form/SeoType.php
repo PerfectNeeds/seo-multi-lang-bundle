@@ -33,6 +33,7 @@ class SeoType extends AbstractType {
                 ->add('slug', TextType::class, ["constraints" => [new NotNull()], "required" => true])
                 ->add('metaDescription')
                 ->add('focusKeyword')
+                ->add('metaTags')
                 ->add('state')
                 ->add("seoSocials", SeoSocialsType::class, [
                     "label" => false

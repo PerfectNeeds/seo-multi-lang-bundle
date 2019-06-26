@@ -30,6 +30,7 @@ class SeoTranslationType extends AbstractType {
                 ->add('slug')
                 ->add('metaDescription')
                 ->add('focusKeyword')
+                ->add('metaTags')
                 ->add('state')
         ;
         $builder->addEventListener(FormEvents::SUBMIT, array($this, 'onSubmit'));
