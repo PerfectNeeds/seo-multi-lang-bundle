@@ -3,7 +3,6 @@
 namespace PN\SeoBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Container;
 use PN\SeoBundle\Entity\Seo;
 use PN\SeoBundle\Entity\Translation\SeoTranslation;
 use PN\SeoBundle\Entity\SeoBaseRoute;
@@ -119,7 +118,7 @@ class SeoFormTypeService {
         $title = null;
         if ($locale == $this->defaultLocale) {
             $title = $this->getEntityTitle($entity);
-        } else {
+        } elseif (method_exists($entity, "getTranslations")) {
             foreach ($entity->getTranslations() as $translation) {
                 if ($translation->getLanguage()->getLocale() == $locale) {
                     $title = $this->getEntityTitle($translation);

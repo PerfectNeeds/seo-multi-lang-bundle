@@ -16,11 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SeoPage {
 
-    use DateTimeTrait,
-        LocaleTrait;
-
-    const SEO_HOME = 1;
-    const SEO_CONTACT_US = 2;
+    use DateTimeTrait;
 
     /**
      * @var int
