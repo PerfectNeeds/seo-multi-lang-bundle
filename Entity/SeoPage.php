@@ -4,6 +4,7 @@ namespace PN\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use PN\ServiceBundle\Model\DateTimeTrait;
+use PN\LocaleBundle\Model\LocaleTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SeoPage {
 
-    use DateTimeTrait;
+    use DateTimeTrait,
+        LocaleTrait;
 
     const SEO_HOME = 1;
     const SEO_CONTACT_US = 2;
