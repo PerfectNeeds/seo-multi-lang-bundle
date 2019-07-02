@@ -16,7 +16,6 @@ class SeoFormTypeService {
     public $defaultLocale;
 
     public function __construct(ContainerInterface $container) {
-//    public function __construct(Container $container) {
         $this->container = $container;
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->defaultLocale = $this->container->getParameter('locale');
