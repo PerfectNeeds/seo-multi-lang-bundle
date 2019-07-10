@@ -34,14 +34,14 @@ class SeoTranslation extends TranslationEntity implements EditableTranslation {
     /**
      * @var string
      *
-     * @ORM\Column(name="focus_keyword", type="string" , nullable=true)
+     * @ORM\Column(name="focus_keyword", type="string", nullable=true)
      */
     protected $focusKeyword;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="meta_keyword", type="string" , nullable=true)
+     * @ORM\Column(name="meta_keyword", type="string", length=255, nullable=true)
      */
     protected $metaKeyword;
 

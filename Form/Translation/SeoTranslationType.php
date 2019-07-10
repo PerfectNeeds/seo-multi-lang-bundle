@@ -30,6 +30,7 @@ class SeoTranslationType extends AbstractType {
                 ->add('slug')
                 ->add('metaDescription')
                 ->add('focusKeyword')
+                ->add('metaKeyword')
                 ->add('metaTags')
                 ->add('state')
         ;

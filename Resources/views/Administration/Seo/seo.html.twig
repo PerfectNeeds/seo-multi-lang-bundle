@@ -94,6 +94,19 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="seoSnippetEditMetaKeyword" class="control-label pull-left">
+                                            Meta Keyword
+                                        </label>
+                                        <span class="label label-default lengthBadge pull-right">
+                                            <span class="length">0</span> / <span class="metaKeywordMaxLength">160</span>
+                                        </span>
+                                        {{ form_widget(seo_form_locale.metaKeyword,{'attr':{'class':'form-control countLength' ,'data-max-length':'160', 'data-preview':'snippetPreviewMetaKeyword', 'placeholder':'Meta Keyword'}}) }}
+                                        {{ form_errors(seo_form_locale.metaKeyword) }}
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
                                         <label for="seoSnippetEditMetaDescription" class="control-label pull-left">
                                             Meta Description
                                         </label>

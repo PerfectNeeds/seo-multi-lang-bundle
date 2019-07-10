@@ -37,14 +37,14 @@ abstract class Seo implements Translatable {
     /**
      * @var string
      *
-     * @ORM\Column(name="meta_description", type="text" , nullable=true)
+     * @ORM\Column(name="meta_description", type="text", nullable=true)
      */
     protected $metaDescription;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="focus_keyword", type="string" , nullable=true)
+     * @ORM\Column(name="focus_keyword", type="string", length=255, nullable=true)
      */
     protected $focusKeyword;
 
