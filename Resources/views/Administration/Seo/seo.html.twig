@@ -182,7 +182,7 @@
                 {% if locale != defaultLocale %}
                     {% set seo_socials_form =attribute(seoForm.seoSocials, socialNetwork.type).translations[locale] %}
                 {% endif %}
-                <div class="tab-pane has-padding" id="seo_social_{{ locale }}_{{ socialNetwork.type }}">
+                <div class="tab-pane socialMediaData has-padding" id="seo_social_{{ locale }}_{{ socialNetwork.type }}">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
