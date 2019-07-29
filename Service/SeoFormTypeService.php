@@ -57,7 +57,7 @@ class SeoFormTypeService {
     private function checkSlugIfExistInDefaultLocale(SeoBaseRoute $seoBaseRoute, $entity, $seoEntity) {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $this->defaultLocale);
-        if (!method_exists($entity->getSeo(), "getId") OR $entity->getSeo()->getId() == null) { // new
+        if (!method_exists($entity, "getSeo") OR $entity->getSeo()->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findOneBy(array('seoBaseRoute' => $seoBaseRoute->getId(), 'slug' => $slug, 'deleted' => FALSE));
         } else { // edit
             $checkSeo = $em->getRepository($this->seoClass)->findBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId());
@@ -73,7 +73,7 @@ class SeoFormTypeService {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $locale);
 
-        if ($entity->getId() == null) { // new
+        if (!method_exists($entity->getSeo(), "getId") OR $entity->getSeo()->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRoute($seoBaseRoute->getId(), $slug, $locale);
         } else { // edit
             $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId(), $locale);
