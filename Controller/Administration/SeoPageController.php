@@ -21,7 +21,7 @@ class SeoPageController extends Controller {
      * @Route("/", name="seopage_index", methods={"GET"})
      */
     public function indexAction() {
-        return $this->render('PNSeoBundle:Administration/SeoPage:index.html.twig');
+        return $this->render('@PNSeo/Administration/SeoPage/index.html.twig');
     }
 
     /**
@@ -49,7 +49,7 @@ class SeoPageController extends Controller {
             return $this->redirectToRoute('seopage_index');
         }
 
-        return $this->render('PNSeoBundle:Administration/SeoPage:new.html.twig', array(
+        return $this->render('@PNSeo/Administration/SeoPage/new.html.twig', array(
                     'seoPage' => $seoPage,
                     'form' => $form->createView(),
         ));
@@ -75,7 +75,7 @@ class SeoPageController extends Controller {
             return $this->redirectToRoute('seopage_edit', array('id' => $seoPage->getId()));
         }
 
-        return $this->render('PNSeoBundle:Administration/SeoPage:edit.html.twig', array(
+        return $this->render('@PNSeo/Administration/SeoPage/edit.html.twig', array(
                     'seoPage' => $seoPage,
                     'edit_form' => $editForm->createView(),
         ));
@@ -115,7 +115,7 @@ class SeoPageController extends Controller {
         $count = $em->getRepository('PNSeoBundle:SeoPage')->filter($search, TRUE);
         $seoPages = $em->getRepository('PNSeoBundle:SeoPage')->filter($search, FALSE, $start, $length);
 
-        return $this->render('PNSeoBundle:Administration/SeoPage:datatable.json.twig', array(
+        return $this->render('@PNSeo/Administration/SeoPage/datatable.json.twig', array(
                     "recordsTotal" => $count,
                     "recordsFiltered" => $count,
                     "seoPages" => $seoPages,

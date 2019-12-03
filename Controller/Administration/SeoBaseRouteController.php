@@ -22,7 +22,7 @@ class SeoBaseRouteController extends Controller {
      * @Route("/", name="seobaseroute_index", methods={"GET"})
      */
     public function indexAction() {
-        return $this->render('PNSeoBundle:Administration/SeoBaseRoute:index.html.twig');
+        return $this->render('@PNSeo/Administration/SeoBaseRoute/index.html.twig');
     }
 
     /**
@@ -52,7 +52,7 @@ class SeoBaseRouteController extends Controller {
             return $this->redirectToRoute('seobaseroute_index');
         }
 
-        return $this->render('PNSeoBundle:Administration/SeoBaseRoute:new.html.twig', [
+        return $this->render('@PNSeo/Administration/SeoBaseRoute/new.html.twig', [
                     'seoBaseRoute' => $seoBaseRoute,
                     'form' => $form->createView(),
                     'entities' => $entities,
@@ -84,7 +84,7 @@ class SeoBaseRouteController extends Controller {
             return $this->redirectToRoute('seobaseroute_edit', array('id' => $seoBaseRoute->getId()));
         }
 
-        return $this->render('PNSeoBundle:Administration/SeoBaseRoute:edit.html.twig', [
+        return $this->render('@PNSeo/Administration/SeoBaseRoute/edit.html.twig', [
                     'seoBaseRoute' => $seoBaseRoute,
                     'edit_form' => $editForm->createView(),
                         ]
@@ -111,7 +111,7 @@ class SeoBaseRouteController extends Controller {
         $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, TRUE);
         $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, FALSE, $start, $length);
 
-        return $this->render("PNSeoBundle:Administration/SeoBaseRoute:datatable.json.twig", [
+        return $this->render("@PNSeo/Administration/SeoBaseRoute/datatable.json.twig", [
                     "recordsTotal" => $count,
                     "recordsFiltered" => $count,
                     "seoBaseRoutes" => $seoBaseRoutes,

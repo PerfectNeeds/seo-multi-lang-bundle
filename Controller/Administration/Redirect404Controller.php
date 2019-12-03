@@ -22,7 +22,7 @@ class Redirect404Controller extends Controller {
      */
     public function indexAction() {
 
-        return $this->render('PNSeoBundle:Administration/Redirect404:index.html.twig');
+        return $this->render('@PNSeo/Administration/Redirect404/index.html.twig');
     }
 
     /**
@@ -49,7 +49,7 @@ class Redirect404Controller extends Controller {
             return $this->redirectToRoute('redirect404_index');
         }
 
-        return $this->render('PNSeoBundle:Administration/Redirect404:new.html.twig', array(
+        return $this->render('@PNSeo/Administration/Redirect404/new.html.twig', array(
                     'redirect404' => $redirect404,
                     'form' => $form->createView(),
         ));
@@ -79,7 +79,7 @@ class Redirect404Controller extends Controller {
         }
 
 
-        return $this->render('PNSeoBundle:Administration/Redirect404:edit.html.twig', array(
+        return $this->render('@PNSeo/Administration/Redirect404/edit.html.twig', array(
                     'redirect404' => $redirect404,
                     'edit_form' => $editForm->createView(),
         ));
@@ -118,7 +118,7 @@ class Redirect404Controller extends Controller {
         $count = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, TRUE);
         $redirect404s = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, FALSE, $start, $length);
 
-        return $this->render('PNSeoBundle:Administration/Redirect404:datatable.json.twig', array(
+        return $this->render('@PNSeo/Administration/Redirect404/datatable.json.twig', array(
                     "recordsTotal" => $count,
                     "recordsFiltered" => $count,
                     "redirect404s" => $redirect404s,

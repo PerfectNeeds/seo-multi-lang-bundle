@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use PN\SeoBundle\Entity\Seo;
 use PN\SeoBundle\Entity\Translation\SeoTranslation;
 use PN\SeoBundle\Entity\SeoBaseRoute;
-use PN\Utils\General;
+use PN\ServiceBundle\Utils\General;
 
 class SeoFormTypeService {
 
