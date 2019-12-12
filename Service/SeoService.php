@@ -37,7 +37,7 @@ class SeoService {
         }
     }
 
-    public function getSlug(Request $request, $slug, $entityClass, $slueRouteParamName = 'slug') {
+    public function getSlug(Request $request, $slug, $entityClass, $slueRouteParamName = 'slug', $redirect = true) {
         if (!is_object($entityClass)) {
             throw new \Exception("Please enter a entity class");
         }
@@ -51,7 +51,7 @@ class SeoService {
         if ($seoEntityDefaultLocale) {
             $entity = $seoEntityDefaultLocale->getRelationalEntity();
             $slugLocale = $this->getSlugLocale($seoEntityDefaultLocale, $locale);
-            if ($locale != $defaultLocale and $slugLocale != $slug) {
+            if ($locale != $defaultLocale and $slugLocale != $slug and $redirect == true) {
                 $newUrl = $this->changeLocaleInURL($request, $locale, $slugLocale, $slueRouteParamName);
                 return new RedirectResponse($newUrl, 301);
             } else {
@@ -62,7 +62,7 @@ class SeoService {
         $seoEntityInAllLocale = $em->getRepository($this->seoClass)->findOneSeo($seoBaseRoute->getId(), $slug);
         if ($seoEntityInAllLocale) {
             $slugLocale = $this->getSlugLocale($seoEntityInAllLocale, $locale);
-            if ($locale != $slugLocale and $slugLocale != $slug) {
+            if ($locale != $slugLocale and $slugLocale != $slug and $redirect == true) {
                 $newUrl = $this->changeLocaleInURL($request, $locale, $slugLocale, $slueRouteParamName);
                 return new RedirectResponse($newUrl, 301);
             } else {
