@@ -2,8 +2,8 @@
 
 namespace PN\SeoBundle\Repository;
 
-use PN\Utils\SQL;
-use PN\Utils\Validate;
+use PN\ServiceBundle\Utils\SQL;
+use PN\ServiceBundle\Utils\Validate;
 
 /**
  * SeoPageRepository
