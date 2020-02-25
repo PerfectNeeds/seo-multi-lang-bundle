@@ -73,7 +73,7 @@ class SeoFormTypeService {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $locale);
 
-        if (!method_exists($entity->getSeo(), "getId") OR $entity->getSeo()->getId() == null) { // new
+        if (!method_exists($entity, "getId") OR $entity->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRoute($seoBaseRoute->getId(), $slug, $locale);
         } else { // edit
             $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRouteAndNotId($seoBaseRoute->getId(), $slug, $entity->getSeo()->getId(), $locale);
