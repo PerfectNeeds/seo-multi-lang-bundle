@@ -1,12 +1,12 @@
-(function ($) {
-    $.seo = function (element, options) {
+(function($) {
+    $.seo = function(element, options) {
         instance = this;
         var $element = $(element), // reference to the jQuery version of DOM element
-                element = element;    // reference to the actual DOM element
+            element = element; // reference to the actual DOM element
 
 
         var defaults = {
-            metaDescriptionMinLength: 120,
+            metaDescriptionMinLength: 50,
             metaDescriptionMaxLength: 160,
             seoTitleMinLength: 50,
             seoTitleMaxLength: 60,
@@ -37,7 +37,7 @@
         var seoStateHiddenInput = $element.find("input[name$='[state]']");
         var locale = $element.data('locale');
 
-        var init = function () {
+        var init = function() {
             // the plugin's final properties are the merged default and 
             // user-provided options (if any)
             instance.settings = $.extend({}, defaults, options);
@@ -46,12 +46,12 @@
             validateInputes();
 
             if (descriptionInput !== null) {
-                CKEDITOR.on('instanceReady', function (e) {
+                CKEDITOR.on('instanceReady', function(e) {
                     var descriptionId = descriptionInput.attr('id');
                     ckEditorEditor = CKEDITOR.instances[descriptionId];
                     countTinyMCEWord(ckEditorEditor);
-                    ckEditorEditor.on('change', function (event) {
-                        var ed = CKEDITOR.instances[descriptionId];//Value of Editor
+                    ckEditorEditor.on('change', function(event) {
+                        var ed = CKEDITOR.instances[descriptionId]; //Value of Editor
                         ckEditorEditor = ed;
                         countTinyMCEWord(ed);
                     });
@@ -68,8 +68,10 @@
             seoFocusKeywordInput.trigger('keyup');
             arrangeAnalysisItemItems();
         };
-        var inintElements = function () {
+        var inintElements = function() {
+            seoTitleInput.data("min-length", instance.settings.seoTitleMinLength);
             seoTitleInput.data("max-length", instance.settings.seoTitleMaxLength);
+            seoMetaDescriptionInput.data("min-length", instance.settings.metaDescriptionMinLength);
             seoMetaDescriptionInput.data("max-length", instance.settings.metaDescriptionMaxLength);
 
             // check if page not content a description textarea
@@ -86,7 +88,7 @@
                 $element.find('button.seoSnippetEditBtn').append(' <i class="icon-circle2 text-danger form-error-bullet"></i>')
             }
         };
-        var validateInputes = function () {
+        var validateInputes = function() {
             if (seoDebug === false) {
                 return false;
             }
@@ -122,7 +124,7 @@
         };
 
         // count tinymce word and calculate the density
-        var countTinyMCEWord = function (ed) {
+        var countTinyMCEWord = function(ed) {
             //count tinymce word
             var wordCount = countWords(ed.getData());
             $element.find('.seoContentCount').text(wordCount);
@@ -152,7 +154,7 @@
 
             var html = $.parseHTML(ed.getData());
             if (html !== null) {
-                $.each(html, function (i, el) {
+                $.each(html, function(i, el) {
                     if (el.nodeName === 'P') {
                         var checkFirstParagraph = el.innerText.includes(seoFocusKeywordInput.val());
                         if (checkFirstParagraph === true && seoFocusKeywordInput.val()) {
@@ -167,7 +169,7 @@
         };
 
         // change color of an analysis item and reorder them
-        var changeAnalysisItemColor = function (elementClass, color) {
+        var changeAnalysisItemColor = function(elementClass, color) {
             $element.find('.' + elementClass).removeClass('border-success border-warning border-danger').addClass('border-' + color);
             arrangeAnalysisItemItems();
 
@@ -191,29 +193,29 @@
 
 
         // reorder analysis item
-        var arrangeAnalysisItemItems = function () {
+        var arrangeAnalysisItemItems = function() {
             $element.find('.analysisList li.border-warning').insertAfter($element.find('.analysisList li:last-child'));
             $element.find('.analysisList li.border-success').insertAfter($element.find('.analysisList li:last-child'));
         };
 
 
         // convert text to slug
-        var convertToSlug = function (Text) {
+        var convertToSlug = function(Text) {
             return Text.toString().toLowerCase()
-                    .replace(/\s+/g, '-')           // Replace spaces with -
-                    .replace(/[^\u0100-\uFFFF\w\-]/g, '-') // Remove all non-word chars ( fix for UTF-8 chars )
-                    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-                    .replace(/^-+/, '')             // Trim - from start of text
-                    .replace(/-+$/, '');
+                .replace(/\s+/g, '-') // Replace spaces with -
+                .replace(/[^\u0100-\uFFFF\w\-]/g, '-') // Remove all non-word chars ( fix for UTF-8 chars )
+                .replace(/\-\-+/g, '-') // Replace multiple - with single -
+                .replace(/^-+/, '') // Trim - from start of text
+                .replace(/-+$/, '');
         };
 
-        var decodeHtml = function (encodedString) {
+        var decodeHtml = function(encodedString) {
             var textArea = document.createElement('textarea');
             textArea.innerHTML = encodedString;
             return textArea.value;
         };
 
-        var strip = function (html) {
+        var strip = function(html) {
             var tmp = document.createElement("div");
             tmp.innerHTML = html;
 
@@ -224,11 +226,11 @@
             return tmp.textContent || tmp.innerText;
         };
 
-        var countWords = function (text) {
+        var countWords = function(text) {
             var normalizedText = text.
-                    replace(/(\r\n|\n|\r)/gm, " ").
-                    replace(/^\s+|\s+$/g, "").
-                    replace("&nbsp;", " ");
+            replace(/(\r\n|\n|\r)/gm, " ").
+            replace(/^\s+|\s+$/g, "").
+            replace("&nbsp;", " ");
 
             normalizedText = strip(normalizedText);
 
@@ -244,25 +246,25 @@
         };
 
         // remove extra spaces
-        var filterText = function (text) {
+        var filterText = function(text) {
             return text.replace('  ', ' ').trim();
         };
         //show analysis item
-        var showAnalysisItem = function (elementId) {
+        var showAnalysisItem = function(elementId) {
             $element.find('.' + elementId).removeClass('hidden');
             $element.find('.' + elementId).insertBefore($element.find('.analysisList li:eq(0)'));
         };
 
         //hide analysis item
-        var hideAnalysisItem = function (elementId) {
+        var hideAnalysisItem = function(elementId) {
             $element.find('.' + elementId).addClass('hidden');
             $element.find('.' + elementId).insertAfter($element.find('.analysisList li:eq(-1)'));
         };
-        var removeAnalysisItem = function (elementId) {
+        var removeAnalysisItem = function(elementId) {
             $element.find('.' + elementId).remove();
         };
         // change input text color
-        var changeInputTextColor = function (elementId, color) {
+        var changeInputTextColor = function(elementId, color) {
             if (color === '') {
                 $element.find('.' + elementId).removeClass('text-danger');
             } else {
@@ -272,7 +274,7 @@
         };
 
         // compare between focus keyword and title
-        var focusKeywordVsTitle = function () {
+        var focusKeywordVsTitle = function() {
             title = seoTitleInput.val();
             focusKeyword = seoFocusKeywordInput.val();
             if (title.length > 0 && focusKeyword.length > 0) {
@@ -289,7 +291,7 @@
         };
 
         // compare between focus keyword and slug
-        var focusKeywordVsSlug = function () {
+        var focusKeywordVsSlug = function() {
             slug = seoSlugInput.val().replace(/[\W_]/g, ' ').replace(/\s+/g, '').trim().toLowerCase();
             focusKeyword = seoFocusKeywordInput.val().replace(/[\W_]/g, ' ').replace(/\s+/g, '').trim().toLowerCase();
             include = slug.includes(focusKeyword);
@@ -299,36 +301,37 @@
                 changeAnalysisItemColor('analysis-8', 'warning');
             }
         };
-        var goToByScroll = function (element) {
+        var goToByScroll = function(element) {
             // Scroll
             $('html,body').animate({
                 scrollTop: element.offset().top
             }, 'slow');
         }
-        var snippetPreview = function (element) {
-            var previewElementId = element.data('preview');
+        var snippetPreview = function(element) {
+                var previewElementId = element.data('preview');
 
-            var inputValue = element.val();
-            var length = inputValue.length;
+                var inputValue = element.val();
+                var length = inputValue.length;
 
-            if (length > 0) {
-                $element.find('.' + previewElementId).text(inputValue);
-            } else {
-                var inputId = element.attr('id');
-                if (inputId === seoTitleInput.attr("id")) {
-                    $element.find('.' + previewElementId).text('[PAGE TITLE]');
-                } else if (inputId === seoMetaDescriptionInput.attr("id")) {
-                    $element.find('.' + previewElementId).text('Please provide a meta description by editing the snippet below.');
+                if (length > 0) {
+                    $element.find('.' + previewElementId).text(inputValue);
+                } else {
+                    var inputId = element.attr('id');
+                    if (inputId === seoTitleInput.attr("id")) {
+                        $element.find('.' + previewElementId).text('[PAGE TITLE]');
+                    } else if (inputId === seoMetaDescriptionInput.attr("id")) {
+                        $element.find('.' + previewElementId).text('Please provide a meta description by editing the snippet below.');
+                    }
                 }
             }
-        }
-        // event listeners
-        $element.find("button.seoSnippetEditBtn").click(function () {
+            // event listeners
+        $element.find("button.seoSnippetEditBtn").click(function() {
             $element.find(".seoSnippetEdit").slideToggle();
         });
 
-        $element.find('.countLength').keyup(function () {
+        $element.find('.countLength').keyup(function() {
             var lengthBadge = $(this).parent().find('.lengthBadge');
+            var minLength = $(this).data('min-length');
             var maxLength = $(this).data('max-length');
             var lengthBadge = $(this).parent().find('.lengthBadge');
 
@@ -345,7 +348,7 @@
             lengthBadge.removeClass('label-warning label-warning label-default label-danger');
             if (length === 0) {
                 lengthBadge.addClass('label-default');
-            } else if (length === maxLength) {
+            } else if (length === maxLength || (typeof minLength != 'undefined' && length >= minLength && length <= maxLength)) {
                 lengthBadge.addClass('label-success');
             } else if (length > maxLength) {
                 lengthBadge.addClass('label-danger');
@@ -355,7 +358,7 @@
 
             lengthBadge.find('.length').text(length);
         });
-        seoTitleInput.keyup(function () {
+        seoTitleInput.keyup(function() {
             value = $(this).val();
             length = value.length;
             focusKeywordVsTitle();
@@ -368,7 +371,7 @@
             snippetPreview($(this));
         });
 
-        titleInput.blur(function () {
+        titleInput.blur(function() {
             if (seoSlugInput.prop('value') === '') {
                 var value = $(this).val();
                 var slug = convertToSlug(value);
@@ -380,7 +383,7 @@
                 seoTitleInput.trigger('keyup');
             }
             if (socialMediaTitlesInput.length > 0) {
-                socialMediaTitlesInput.each(function () {
+                socialMediaTitlesInput.each(function() {
                     if ($(this).prop('value') === '') {
                         $(this).val(titleInput.val());
                     }
@@ -388,14 +391,14 @@
             }
         });
         // convert slug text to slugify format
-        seoSlugInput.blur(function () {
+        seoSlugInput.blur(function() {
             var value = filterText($(this).val());
             var slugify = convertToSlug(value);
             seoSlugInput.val(slugify);
             focusKeywordVsSlug();
         });
         // Check if  the slug  is used before
-        seoSlugInput.keyup(function () {
+        seoSlugInput.keyup(function() {
             var previewElementId = $(this).data('preview');
             var value = filterText($(this).val());
             var slugify = convertToSlug(value);
@@ -405,17 +408,18 @@
                 currentSlugRequest = $.ajax({
                     url: checkSlugIsUsedUrlAjax,
                     data: {
-                        slug: slugify, seoId: seoId,
+                        slug: slugify,
+                        seoId: seoId,
                         seoBaseRouteId: seoBaseRouteId,
-                        locale:locale
+                        locale: locale
                     },
-                    beforeSend: function () {
+                    beforeSend: function() {
                         seoSlugInput.parent().find(".form-control-feedback").removeClass("hidden");
                         if (currentSlugRequest !== null) {
                             currentSlugRequest.abort();
                         }
                     },
-                    success: function (result) {
+                    success: function(result) {
                         var validationLabel = seoSlugInput.parent().find('.validation-error-label');
                         if (validationLabel.length == 1) {
                             validationLabel.remove();
@@ -438,12 +442,12 @@
             }
         });
         // remove extra spaces between words
-        seoMetaDescriptionInput.blur(function () {
+        seoMetaDescriptionInput.blur(function() {
             var value = $(this).val();
             $(this).val(filterText(value));
             snippetPreview($(this));
         });
-        seoMetaDescriptionInput.keyup(function () {
+        seoMetaDescriptionInput.keyup(function() {
             var value = filterText($(this).val());
             var length = value.length;
             if (length === 0) {
@@ -470,7 +474,7 @@
             }
             snippetPreview($(this));
         });
-        seoFocusKeywordInput.keyup(function () {
+        seoFocusKeywordInput.keyup(function() {
             var value = $(this).val().trim();
             if (value.length === 0) {
                 showAnalysisItem('analysis-1');
@@ -485,12 +489,13 @@
 
             currentFocusKeywordRequest = $.ajax({
                 url: focusKeywordUrlAjax,
-                data: {focusKeyword: value, seoId: seoId},
-                beforeSend: function () {
+                data: { focusKeyword: value, seoId: seoId },
+                beforeSend: function() {
                     if (currentFocusKeywordRequest !== null) {
                         currentFocusKeywordRequest.abort();
                     }
-                }, success: function (result) {
+                },
+                success: function(result) {
                     if (result == 0) {
                         changeAnalysisItemColor('analysis-9', 'success');
                     } else {
@@ -507,9 +512,9 @@
         init();
     };
     // add the plugin to the jQuery.fn object
-    $.fn.seoPlugin = function (options) {
+    $.fn.seoPlugin = function(options) {
         // iterate through the DOM elements we are attaching the plugin to
-        return this.each(function () {
+        return this.each(function() {
 
             // if plugin has not already been attached to the element
             if (undefined == $(this).data('seoPlugin')) {
