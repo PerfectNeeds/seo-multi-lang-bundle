@@ -42,7 +42,7 @@
             // user-provided options (if any)
             instance.settings = $.extend({}, defaults, options);
 
-            inintElements();
+            initElements();
             validateInputes();
 
             if (descriptionInput !== null) {
@@ -62,13 +62,14 @@
                 removeAnalysisItem("analysis-12");
             }
 
+            $element.find('.countLength').trigger('keyup');
             seoMetaDescriptionInput.trigger('keyup');
             seoTitleInput.trigger('keyup');
             seoSlugInput.trigger('keyup');
             seoFocusKeywordInput.trigger('keyup');
             arrangeAnalysisItemItems();
         };
-        var inintElements = function() {
+        var initElements = function() {
             seoTitleInput.data("min-length", instance.settings.seoTitleMinLength);
             seoTitleInput.data("max-length", instance.settings.seoTitleMaxLength);
             seoMetaDescriptionInput.data("min-length", instance.settings.metaDescriptionMinLength);
@@ -156,8 +157,8 @@
             if (html !== null) {
                 $.each(html, function(i, el) {
                     if (el.nodeName === 'P') {
-                        var checkFirstParagraph = el.innerText.includes(seoFocusKeywordInput.val());
-                        if (checkFirstParagraph === true && seoFocusKeywordInput.val()) {
+                        var checkFirstParagraph = el.innerText.toLowerCase().includes(focusKeywordValue);
+                        if (checkFirstParagraph === true && focusKeywordValue) {
                             changeAnalysisItemColor('analysis-11', 'success');
                         } else {
                             changeAnalysisItemColor('analysis-11', 'danger');
@@ -275,8 +276,8 @@
 
         // compare between focus keyword and title
         var focusKeywordVsTitle = function() {
-            title = seoTitleInput.val();
-            focusKeyword = seoFocusKeywordInput.val();
+            title = seoTitleInput.val().toLowerCase();
+            focusKeyword = seoFocusKeywordInput.val().toLowerCase();
             if (title.length > 0 && focusKeyword.length > 0) {
                 if (title.includes(focusKeyword)) {
                     hideAnalysisItem('analysis-5');
@@ -333,7 +334,6 @@
             var lengthBadge = $(this).parent().find('.lengthBadge');
             var minLength = $(this).data('min-length');
             var maxLength = $(this).data('max-length');
-            var lengthBadge = $(this).parent().find('.lengthBadge');
 
             var inputValue = $(this).val();
             var length = inputValue.length;
