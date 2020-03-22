@@ -1,5 +1,12 @@
 {% set seoBaseRoute = getBaseRoute(entity) %}
 <script>
+    {% set formId = '' %}
+    {% if form is defined %}
+        {% set formId = form.vars.id %}
+    {% elseif edit_form is defined %}
+        {% set formId = edit_form.vars.id %}
+    {% endif %}
+    var formId = '{{ formId }}';
     var focusKeywordUrlAjax = '{{ path('fe_check_focus_keyword_ajax') }}';
     var checkSlugIsUsedUrlAjax = '{{ path('fe_check_slug_ajax') }}';
     var seoId = {% if entity.seo.id is defined %}'{{ entity.seo.id }}'{% else %}null{% endif %};
@@ -10,7 +17,7 @@
         var seoDebug = false;
     {% endif %}
 </script>
-<script src="{{ asset('bundles/pnseo/pn.seo.js') }}?v=1.0.1"></script>
+<script src="{{ asset('bundles/pnseo/pn.seo.js') }}?v=1.0.2"></script>
 <link href="{{ asset('bundles/pnseo/pn.style.seo.css') }}" rel="stylesheet" type="text/css" />
 <script>
     $(document).ready(function () {

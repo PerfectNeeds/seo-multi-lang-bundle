@@ -27,8 +27,8 @@
         var currentSlugRequest = null;
         var currentFocusKeywordRequest = null;
         var ckEditorEditor = null;
-        var titleInput = $element.prev(".panel").find("input[name$='[title]']").first();
-        var descriptionInput = $element.prev(".panel").find("textarea[name$='[description]']").first();
+        var titleInput = $element.parent().find(".panel").find("input[name$='" + formId + "[title]']").first();
+        var descriptionInput = $element.parent().find(".panel").find("textarea[name$='[description]']").first();
         var seoTitleInput = $element.find("input[name$='[title]']").first();
         var seoFocusKeywordInput = $element.find("input[name$='[focusKeyword]']").first();
         var socialMediaTitlesInput = $element.find(".socialMediaData").find("input[name$='[title]']");
