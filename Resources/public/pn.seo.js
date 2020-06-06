@@ -45,7 +45,7 @@
             initElements();
             validateInputes();
 
-            if (descriptionInput !== null) {
+            if (descriptionInput !== null && typeof CKEDITOR !== "undefined") {
                 CKEDITOR.on('instanceReady', function(e) {
                     var descriptionId = descriptionInput.attr('id');
                     ckEditorEditor = CKEDITOR.instances[descriptionId];
