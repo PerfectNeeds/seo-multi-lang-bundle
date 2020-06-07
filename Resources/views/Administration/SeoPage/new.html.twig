@@ -24,7 +24,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('admin/js/ckeditor/ckeditor.js') }}"></script>
     {% include 'PNSeoBundle:Administration/Seo:seo.js.html.twig' with {'entity':seoPage} %}
     <script type="text/javascript" src="{{ asset('admin/js/plugins/forms/validation/validate.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/js/pages/form_validation.js') }}"></script>
