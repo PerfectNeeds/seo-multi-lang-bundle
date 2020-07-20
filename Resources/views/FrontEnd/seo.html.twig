@@ -1,8 +1,8 @@
 {#{% set seo = entity.seo %}
 {% use 'PNSeoBundle:FrontEnd:seo.html.twig' %}#}
-{% block title %}{% spaceless %}{{ seo.title|raw }}{% endspaceless %}{% endblock %}
+{% block title %}{% apply spaceless %}{{ seo.title|raw }}{% endapply %}{% endblock %}
 {% block metaTag -%}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if seo.metaDescription|trim|length > 0 %}
             <meta name="description" content="{{ seo.metaDescription|trim }}">
         {% endif %}
@@ -35,5 +35,5 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}

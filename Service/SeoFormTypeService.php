@@ -25,7 +25,7 @@ class SeoFormTypeService {
     public function checkAndGenerateSlug($entity, $seoEntity, $locale = null) {
 
         if (!$seoEntity instanceof Seo AND ! $seoEntity instanceof SeoTranslation) {
-            throw new Exception('$seoEntity Must be instanceof Seo or SeoTranslation');
+            throw new \Exception('$seoEntity Must be instanceof Seo or SeoTranslation');
         }
 
         $em = $this->em;
