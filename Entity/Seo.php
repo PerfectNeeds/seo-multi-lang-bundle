@@ -4,7 +4,7 @@ namespace PN\SeoBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use VM5\EntityTranslationsBundle\Model\Translatable;
+use Arxy\EntityTranslationsBundle\Model\Translatable;
 use PN\LocaleBundle\Model\LocaleTrait;
 
 /**

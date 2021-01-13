@@ -54,7 +54,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new VM5\EntityTranslationsBundle\VM5EntityTranslationsBundle(),
+        new Arxy\EntityTranslationsBundle\ArxyEntityTranslationsBundle(),
         new PN\SeoBundle\PNSeoBundle(),
         new \PN\LocaleBundle\PNLocaleBundle(),
         new \PN\ServiceBundle\PNServiceBundle(),
@@ -187,7 +187,7 @@ doctrine:
    orm:
         # search for the "ResolveTargetEntityListener" class for an article about this
         resolve_target_entities: 
-            VM5\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
+            Arxy\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
             PN\SeoBundle\Entity\Seo: PN\Bundle\SeoBundle\Entity\Seo
 
 pn_seo:
@@ -273,7 +273,7 @@ namespace PN\Bundle\CMSBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use PN\ServiceBundle\Model\DateTimeTrait;
-use VM5\EntityTranslationsBundle\Model\Translatable;
+use Arxy\EntityTranslationsBundle\Model\Translatable;
 use PN\LocaleBundle\Model\LocaleTrait;
 
 /**

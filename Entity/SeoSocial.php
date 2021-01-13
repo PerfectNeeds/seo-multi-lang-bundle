@@ -3,7 +3,7 @@
 namespace PN\SeoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use VM5\EntityTranslationsBundle\Model\Translatable;
+use Arxy\EntityTranslationsBundle\Model\Translatable;
 use PN\LocaleBundle\Model\LocaleTrait;
 
 /**

@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
+use Arxy\EntityTranslationsBundle\Form\Type\TranslationsType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 

@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotNull;
 use PN\SeoBundle\Form\Type\SeoSocialsType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
+use Arxy\EntityTranslationsBundle\Form\Type\TranslationsType;
 use PN\SeoBundle\Form\Translation\SeoTranslationType;
 use PN\SeoBundle\Service\SeoFormTypeService;
 
