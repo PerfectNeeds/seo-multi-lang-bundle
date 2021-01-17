@@ -29,7 +29,7 @@
         var ckEditorEditor = null;
         var locale = $element.data("locale");
         var titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='" + formId + "[title]']").first();
-        if (!titleInput) {
+        if (titleInput.length == 0) {
              titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='[title]']").first();
         }
         var descriptionInput = $element.parent().find(".panel").find("textarea[name$='[description]']").first();
