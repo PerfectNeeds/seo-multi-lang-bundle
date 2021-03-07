@@ -10,7 +10,7 @@ class SeoBaseRouteRepository extends EntityRepository {
 
     public function findByEntity($entity, $error = true) {
         $entityName = (new \ReflectionClass($entity))->getShortName();
-        $seoBaseRoute = $this->findOneByEntityName($entityName);
+        $seoBaseRoute = $this->findOneBy(["entityName"=>$entityName]);
 
         if (!$seoBaseRoute AND $error == true) {
             throw new \Exception("Can't find SeoBaseRoute");
