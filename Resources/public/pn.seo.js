@@ -73,7 +73,7 @@
             seoMetaDescriptionInput.trigger('keyup');
             seoTitleInput.trigger('keyup');
             seoSlugInput.trigger('keyup');
-            seoFocusKeywordInput.trigger('keyup');
+            seoFocusKeywordInput.trigger('change');
             arrangeAnalysisItemItems();
         };
         var initElements = function() {
@@ -481,7 +481,7 @@
             }
             snippetPreview($(this));
         });
-        seoFocusKeywordInput.keyup(function() {
+        seoFocusKeywordInput.on('keyup change', function() {
             var value = $(this).val().trim();
             if (value.length === 0) {
                 showAnalysisItem('analysis-1');
