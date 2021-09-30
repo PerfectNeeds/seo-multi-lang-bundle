@@ -2,31 +2,35 @@
 
 namespace PN\SeoBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use PN\SeoBundle\Entity\SeoSocial;
 use PN\SeoBundle\Form\SeoSocialType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SeoSocialsType extends AbstractType {
+class SeoSocialsType extends AbstractType
+{
 
     /**
      * @var array
      */
     private $forDelete = [];
+    private $multipleLanguages = true;
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $this->multipleLanguages = $options['multipleLanguages'];
         $builder
-                ->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'))
-                ->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'))
-                ->addEventListener(FormEvents::SUBMIT, array($this, 'submit'))
-        ;
+            ->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'))
+            ->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'))
+            ->addEventListener(FormEvents::SUBMIT, array($this, 'submit'));
     }
 
-    public function onPreSetData(FormEvent $event) {
+    public function onPreSetData(FormEvent $event)
+    {
         $form = $event->getForm();
 
         $socialNetworks = SeoSocial::$socialNetworks;
@@ -45,25 +49,30 @@ class SeoSocialsType extends AbstractType {
         $event->setData($newData);
     }
 
-    private function getOptions($seoSocialType) {
+    private function getOptions($seoSocialType)
+    {
         $options['required'] = false;
         $options['label'] = false;
 
 
-        $options['property_path'] = '[' . $seoSocialType . ']';
+        $options['property_path'] = '['.$seoSocialType.']';
         $options['empty_data'] = function (FormInterface $form) {
             if ($form->isEmpty()) {
                 return null;
             } else {
                 $dataClass = $form->getConfig()->getOption('data_class');
+
                 return new $dataClass;
             }
         };
         $options['error_bubbling'] = false;
+        $options['multipleLanguages'] = $this->multipleLanguages;
+
         return $options;
     }
 
-    public function onPreSubmit(FormEvent $event) {
+    public function onPreSubmit(FormEvent $event)
+    {
         $dataSocialNetworks = $event->getData();
 
         $isEmpty = function ($data) use (&$isEmpty) {
@@ -89,7 +98,8 @@ class SeoSocialsType extends AbstractType {
         }
     }
 
-    public function submit(FormEvent $event) {
+    public function submit(FormEvent $event)
+    {
         $dataSocialNetworks = $event->getData();
         $forDelete = [];
         $socialNetworks = SeoSocial::$socialNetworks;
@@ -119,14 +129,17 @@ class SeoSocialsType extends AbstractType {
         $event->setData($dataSocialNetworks);
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
-            'data_class' => NULL,
-            'by_reference' => FALSE
+            'data_class' => null,
+            'by_reference' => false,
+            "multipleLanguages" => true,
         ));
     }
 
-    public function getBlockPrefix() {
+    public function getBlockPrefix()
+    {
         return 'SeoSocialNetworkType';
     }
 

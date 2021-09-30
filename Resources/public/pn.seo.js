@@ -28,9 +28,12 @@
         var currentFocusKeywordRequest = null;
         var ckEditorEditor = null;
         var locale = $element.data("locale");
-        var titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='" + formId + "[title]']").first();
+        var titleInput = $element.prev(".panel").find("input[name$='[title]']").first();
         if (titleInput.length == 0) {
-             titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='[title]']").first();
+            titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='" + formId + "[title]']").first();
+        }
+        if (titleInput.length == 0) {
+            titleInput = $("#locale-tab-" + locale).find(".panel").find("input[name$='[title]']").first();
         }
         var descriptionInput = $element.parent().find(".panel").find("textarea[name$='[description]']").first();
         var seoTitleInput = $element.find("input[name$='[title]']").first();
@@ -39,7 +42,7 @@
         var seoMetaDescriptionInput = $element.find("textarea[name$='[metaDescription]']").first();
         var seoSlugInput = $element.find("input[name$='[slug]']");
         var seoStateHiddenInput = $element.find("input[name$='[state]']");
-        var locale = $element.data('locale');
+
 
         var init = function() {
             // the plugin's final properties are the merged default and 
@@ -70,7 +73,7 @@
             seoMetaDescriptionInput.trigger('keyup');
             seoTitleInput.trigger('keyup');
             seoSlugInput.trigger('keyup');
-            seoFocusKeywordInput.trigger('keyup');
+            seoFocusKeywordInput.trigger('change');
             arrangeAnalysisItemItems();
         };
         var initElements = function() {
@@ -478,7 +481,7 @@
             }
             snippetPreview($(this));
         });
-        seoFocusKeywordInput.keyup(function() {
+        seoFocusKeywordInput.on('keyup change', function() {
             var value = $(this).val().trim();
             if (value.length === 0) {
                 showAnalysisItem('analysis-1');
