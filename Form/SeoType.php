@@ -5,20 +5,15 @@ namespace PN\SeoBundle\Form;
 use PN\SeoBundle\Form\Translation\SeoTranslationType;
 use PN\SeoBundle\Form\Type\SeoSocialsType;
 use PN\SeoBundle\Service\SeoFormTypeService;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotNull;
-use PN\SeoBundle\Form\Type\SeoSocialsType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Arxy\EntityTranslationsBundle\Form\Type\TranslationsType;
-use PN\SeoBundle\Form\Translation\SeoTranslationType;
-use PN\SeoBundle\Service\SeoFormTypeService;
 
 class SeoType extends AbstractType
 {

@@ -2,17 +2,13 @@
 
 namespace PN\SeoBundle\Form;
 
-use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Arxy\EntityTranslationsBundle\Form\Type\TranslationsType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 
 class SeoSocialType extends AbstractType
