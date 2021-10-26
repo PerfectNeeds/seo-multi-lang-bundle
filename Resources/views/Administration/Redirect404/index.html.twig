@@ -13,7 +13,7 @@
     </div>
 {% endblock %}
 {% block body %}
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% if is_granted("ROLE_ADMIN") %}
         <ul class="fab-menu fab-menu-fixed fab-menu-bottom-right">
             <li>
                 <a href="{{ path('redirect404_new') }}"
