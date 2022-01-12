@@ -14,7 +14,7 @@
         "php": "^7.3 || ^8.0",
         "symfony/framework-bundle": "^4.4 || ^3.4",
         "perfectneeds/locale-bundle": "~2.0",
-        "perfectneeds/service-bundle": "~1.0"
+        "perfectneeds/service-bundle": "~2.0"
     },
     "autoload": {
         "psr-4": {
