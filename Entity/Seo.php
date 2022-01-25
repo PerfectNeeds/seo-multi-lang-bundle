@@ -2,9 +2,10 @@
 
 namespace PN\SeoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Arxy\EntityTranslationsBundle\Model\Translatable;
+use PN\LocaleBundle\Model\Translatable;
 use PN\LocaleBundle\Model\LocaleTrait;
 
 /**
@@ -92,8 +93,8 @@ abstract class Seo implements Translatable {
      * Constructor
      */
     public function __construct() {
-        $this->seoSocials = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->seoSocials = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function getRelationalEntity() {

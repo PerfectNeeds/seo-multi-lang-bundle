@@ -2,14 +2,14 @@
 
 namespace PN\SeoBundle\Form;
 
+use PN\LocaleBundle\Form\Type\TranslationsType;
+use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Arxy\EntityTranslationsBundle\Form\Type\TranslationsType;
-use PN\SeoBundle\Form\Translation\SeoSocialTranslationType;
 
 class SeoSocialType extends AbstractType
 {
@@ -50,7 +50,8 @@ class SeoSocialType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix() {
+    public function getBlockPrefix(): string
+    {
         return 'pn_bundle_seobundle_seo_social';
     }
 

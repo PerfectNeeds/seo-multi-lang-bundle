@@ -3,20 +3,21 @@
 namespace PN\SeoBundle\Twig;
 
 use Twig\Extension\AbstractExtension;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\TwigFunction;
-use PN\SeoBundle\Twig\VarsRuntime;
 
-class VarsExtension extends AbstractExtension {
+class VarsExtension extends AbstractExtension
+{
 
-    public function getFunctions() {
-        return array(
-            new TwigFunction('getBaseRoute', array(VarsRuntime::class, 'getBaseRoute')),
-            new TwigFunction('backlinks', array(VarsRuntime::class, 'backlinks')),
-        );
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('getBaseRoute', [VarsRuntime::class, 'getBaseRoute']),
+            new TwigFunction('backlinks', [VarsRuntime::class, 'backlinks']),
+        ];
     }
 
-    public function getName() {
+    public function getName(): string
+    {
         return 'seo.twig.extension';
     }
 

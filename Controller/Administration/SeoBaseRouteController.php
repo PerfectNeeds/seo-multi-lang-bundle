@@ -2,8 +2,10 @@
 
 namespace PN\SeoBundle\Controller\Administration;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Form\SeoBaseRouteType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PN\ServiceBundle\Service\UserService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use PN\SeoBundle\Entity\SeoBaseRoute;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,14 +16,16 @@ use PN\ServiceBundle\Service\CommonFunctionService;
  *
  * @Route("base-route")
  */
-class SeoBaseRouteController extends Controller {
+class SeoBaseRouteController extends AbstractController
+{
 
     /**
      * Lists all seoBaseRoute entities.
      *
      * @Route("/", name="seobaseroute_index", methods={"GET"})
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         return $this->render('@PNSeo/Administration/SeoBaseRoute/index.html.twig');
     }
 
@@ -30,18 +34,22 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/new", name="seobaseroute_new", methods={"GET", "POST"})
      */
-    public function newAction(Request $request) {
+    public function newAction(
+        Request $request,
+        CommonFunctionService $commonFunctionService,
+        UserService $userService,
+        EntityManagerInterface $em
+    ) {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
-        $entities = $this->getEntitiesHasSeoEntity();
+        $entities = $this->getEntitiesHasSeoEntity($commonFunctionService);
         $seoBaseRoute = new SeoBaseRoute();
         $form = $this->createForm(SeoBaseRouteType::class, $seoBaseRoute, ["entitiesNames" => $entities]);
         $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $userName = $this->get('user')->getUserName();
+            $userName = $userService->getUserName();
             $seoBaseRoute->setCreator($userName);
             $seoBaseRoute->setModifiedBy($userName);
             $em->persist($seoBaseRoute);
@@ -53,10 +61,10 @@ class SeoBaseRouteController extends Controller {
         }
 
         return $this->render('@PNSeo/Administration/SeoBaseRoute/new.html.twig', [
-                    'seoBaseRoute' => $seoBaseRoute,
-                    'form' => $form->createView(),
-                    'entities' => $entities,
-                        ]
+                'seoBaseRoute' => $seoBaseRoute,
+                'form' => $form->createView(),
+                'entities' => $entities,
+            ]
         );
     }
 
@@ -65,17 +73,21 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/{id}/edit", name="seobaseroute_edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, SeoBaseRoute $seoBaseRoute) {
+    public function editAction(
+        Request $request,
+        SeoBaseRoute $seoBaseRoute,
+        CommonFunctionService $commonFunctionService,
+        UserService $userService,
+        EntityManagerInterface $em
+    ) {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
-
-        $entities = $this->getEntitiesHasSeoEntity();
+        $entities = $this->getEntitiesHasSeoEntity($commonFunctionService);
         $editForm = $this->createForm(SeoBaseRouteType::class, $seoBaseRoute, ["entitiesNames" => $entities]);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $userName = $this->get('user')->getUserName();
+            $userName = $userService->getUserName();
             $seoBaseRoute->setModifiedBy($userName);
             $em->flush();
 
@@ -85,9 +97,9 @@ class SeoBaseRouteController extends Controller {
         }
 
         return $this->render('@PNSeo/Administration/SeoBaseRoute/edit.html.twig', [
-                    'seoBaseRoute' => $seoBaseRoute,
-                    'edit_form' => $editForm->createView(),
-                        ]
+                'seoBaseRoute' => $seoBaseRoute,
+                'edit_form' => $editForm->createView(),
+            ]
         );
     }
 
@@ -96,9 +108,8 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="seobaseroute_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
-
+    public function dataTableAction(Request $request, EntityManagerInterface $em)
+    {
         $srch = $request->query->get("search");
         $start = $request->query->get("start");
         $length = $request->query->get("length");
@@ -108,19 +119,20 @@ class SeoBaseRouteController extends Controller {
         $search->string = $srch['value'];
         $search->ordr = $ordr[0];
 
-        $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, TRUE);
-        $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, FALSE, $start, $length);
+        $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, true);
+        $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, false, $start, $length);
 
         return $this->render("@PNSeo/Administration/SeoBaseRoute/datatable.json.twig", [
-                    "recordsTotal" => $count,
-                    "recordsFiltered" => $count,
-                    "seoBaseRoutes" => $seoBaseRoutes,
-                        ]
+                "recordsTotal" => $count,
+                "recordsFiltered" => $count,
+                "seoBaseRoutes" => $seoBaseRoutes,
+            ]
         );
     }
 
-    private function getEntitiesHasSeoEntity() {
-        return $this->get(CommonFunctionService::class)->getEntitiesWithObject('seo', ["SeoSocial"]);
+    private function getEntitiesHasSeoEntity(CommonFunctionService $commonFunctionService)
+    {
+        return $commonFunctionService->getEntitiesWithObject('seo', ["SeoSocial"]);
     }
 
 }

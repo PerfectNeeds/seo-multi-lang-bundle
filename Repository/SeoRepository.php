@@ -2,10 +2,16 @@
 
 namespace PN\SeoBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use PN\SeoBundle\Entity\Seo;
 
-class SeoRepository extends EntityRepository
+class SeoRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry, string $class = Seo::class)
+    {
+        parent::__construct($registry, $class);
+    }
 
     public function findBySlugAndBaseRouteAndNotId($seoBaseRouteId, $slug, $seoId)
     {
@@ -17,9 +23,7 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("seoId", $seoId);
         $statement->bindValue("deleted", false);
-        $statement->execute();
-
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }
@@ -58,9 +62,7 @@ class SeoRepository extends EntityRepository
          $statement->bindValue("seoId", $seoId);
          $statement->bindValue("locale", $locale);
          $statement->bindValue("deleted", FALSE);
-         $statement->execute();
-
-         $queryResult = $statement->fetchColumn();
+         $queryResult = $statement->executeQuery()->fetchOne();
          if (!$queryResult) {
              return null;
          }
@@ -96,9 +98,8 @@ class SeoRepository extends EntityRepository
          $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
          $statement->bindValue("locale", $locale);
          $statement->bindValue("deleted", FALSE);
-         $statement->execute();
 
-         $queryResult = $statement->fetchColumn();
+         $queryResult = $statement->executeQuery()->fetchOne();
          if (!$queryResult) {
              return null;
          }
@@ -117,24 +118,22 @@ class SeoRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-       /* $connection = $this->getEntityManager()->getConnection();
-        $sql = "SELECT id FROM seo WHERE slug = :slug AND seo_base_route_id=:seoBaseRouteId AND deleted=:deleted Limit 1";
+        /* $connection = $this->getEntityManager()->getConnection();
+         $sql = "SELECT id FROM seo WHERE slug = :slug AND seo_base_route_id=:seoBaseRouteId AND deleted=:deleted Limit 1";
 
-        $statement = $connection->prepare($sql);
-        $statement->bindValue("slug", $slug);
-        $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
-        $statement->bindValue("deleted", false);
+         $statement = $connection->prepare($sql);
+         $statement->bindValue("slug", $slug);
+         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
+         $statement->bindValue("deleted", false);
 
-        $statement->execute();
+         $queryResult = $statement->executeQuery()->fetchAllAssociative();
 
-        $queryResult = $statement->fetchAll();
+         $result = array();
+         foreach ($queryResult as $key => $r) {
+             $result = $this->find($r['id']);
+         }
 
-        $result = array();
-        foreach ($queryResult as $key => $r) {
-            $result = $this->find($r['id']);
-        }
-
-        return $result;*/
+         return $result;*/
     }
 
     public function findByFocusKeywordAndNotId($focusKeyword, $seoId)
@@ -148,13 +147,16 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoId", $seoId);
         $statement->bindValue("deleted", false);
 
-        $statement->execute();
+        $queryResult = $statement->executeQuery()->fetchAllAssociative();
 
-        $queryResult = $statement->fetchAll();
+        $result = $ids = [];
 
-        $result = array();
         foreach ($queryResult as $key => $r) {
-            $result[$key] = $this->find($r['id']);
+            $ids[] = $r['id'];
+        }
+
+        if (count($ids) > 0) {
+            return $this->findBy(["id" => $ids]);
         }
 
         return $result;
@@ -172,9 +174,8 @@ class SeoRepository extends EntityRepository
         $statement = $connection->prepare($sql);
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("slug", $slug);
-        $statement->execute();
 
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }
@@ -196,9 +197,7 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("slug", $slug);
         $statement->bindValue("locale", $locale);
-        $statement->execute();
-
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }

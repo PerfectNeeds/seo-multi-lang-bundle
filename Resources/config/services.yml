@@ -1,23 +1,33 @@
 services:
-    _defaults:
-        # automatically injects dependencies in your services
-        autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
-        public: true
-        
-    PN\SeoBundle\Twig\:
-        public: false
-        resource: '../../Twig/*'
-    PN\SeoBundle\Form\:
-        public: false
-        resource: '../../Form/*'
-    PN\SeoBundle\Controller\:
-        public: false
-        resource: '../../Controller/*'
-    PN\SeoBundle\Service\:
-        resource: '../../Service/*'
-    fe_seo:
-        class:        PN\SeoBundle\Service\SeoService
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  PN\SeoBundle\Twig\:
+    public: false
+    resource: '../../Twig/*'
+
+  PN\SeoBundle\Form\:
+    public: false
+    resource: '../../Form/*'
+
+  PN\SeoBundle\Controller\:
+    public: false
+    resource: '../../Controller/*'
+    tags: ['controller.service_arguments']
+
+  PN\SeoBundle\Controller\Administration\:
+    public: false
+    resource: '../../Controller/Administration/*'
+    tags: [ 'controller.service_arguments' ]
+
+  PN\SeoBundle\Repository\:
+    resource: '../../Repository/*'
+    tags: [ 'doctrine.repository_service' ]
+
+  PN\SeoBundle\Service\:
+    resource: '../../Service/*'
+
+  fe_seo:
+    public: true
+    class: PN\SeoBundle\Service\SeoService

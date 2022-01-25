@@ -2,37 +2,36 @@
 
 namespace PN\SeoBundle\Service;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Entity\Seo;
 use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\SeoBundle\Entity\Translation\SeoTranslation;
 use PN\ServiceBundle\Utils\General;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class SeoFormTypeService
 {
 
-    public $container;
-    public $em;
-    public $seoClass;
-    public $defaultLocale;
+    private $em;
+    private $seoClass;
+    private $defaultLocale;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em, ParameterBagInterface $parameterBag)
     {
-        $this->container = $container;
-        $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->defaultLocale = $this->container->getParameter('locale');
-        $this->seoClass = $this->container->getParameter('pn_seo_class');
+        $this->em = $em;
+        $this->defaultLocale = $parameterBag->get('locale');
+        $this->seoClass = $parameterBag->get('pn_seo_class');
     }
 
     public function checkAndGenerateSlug($entity, $seoEntity, $locale = null)
     {
 
-        if (!$seoEntity instanceof Seo AND !$seoEntity instanceof SeoTranslation) {
+        if (!$seoEntity instanceof Seo and !$seoEntity instanceof SeoTranslation) {
             throw new \Exception('$seoEntity Must be instanceof Seo or SeoTranslation');
         }
 
         $em = $this->em;
-        $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($entity);
+        $seoBaseRoute = $em->getRepository(SeoBaseRoute::class)->findByEntity($entity);
 
         if ($locale == null) {
             $locale = $this->defaultLocale;
@@ -64,7 +63,7 @@ class SeoFormTypeService
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $this->defaultLocale);
         if (!method_exists($entity,
-                "getSeo") OR $entity->getSeo() == null OR $entity->getSeo()->getId() == null) { // new
+                "getSeo") or $entity->getSeo() == null or $entity->getSeo()->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findOneBy(array(
                 'seoBaseRoute' => $seoBaseRoute->getId(),
                 'slug' => $slug,
@@ -87,7 +86,7 @@ class SeoFormTypeService
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $locale);
 
-        if (!method_exists($entity, "getId") OR $entity->getId() == null) { // new
+        if (!method_exists($entity, "getId") or $entity->getId() == null) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findTranBySlugAndBaseRoute($seoBaseRoute->getId(), $slug,
                 $locale);
         } else { // edit

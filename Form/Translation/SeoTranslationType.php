@@ -2,63 +2,62 @@
 
 namespace PN\SeoBundle\Form\Translation;
 
+use Doctrine\ORM\EntityManagerInterface;
+use PN\SeoBundle\Service\SeoFormTypeService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use PN\SeoBundle\Service\SeoFormTypeService;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SeoTranslationType extends AbstractType {
+class SeoTranslationType extends AbstractType
+{
 
-    protected $em;
-    protected $container;
-    protected $seoTranslationClass;
+    private $em;
+    private $seoFormTypeService;
+    private $seoTranslationClass;
 
-    public function __construct(ContainerInterface $container) {
-        $this->container = $container;
-        $this->em = $container->get("doctrine")->getManager();
-        $this->seoTranslationClass = $container->getParameter("pn_seo_translation_class");
+    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $em, SeoFormTypeService $seoFormTypeService)
+    {
+        $this->seoFormTypeService = $seoFormTypeService;
+        $this->em = $em;
+        $this->seoTranslationClass = $parameterBag->get("pn_seo_translation_class");
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->add('title')
-                ->add('slug')
-                ->add('metaDescription')
-                ->add('focusKeyword')
-                ->add('metaKeyword')
-                ->add('metaTags')
-                ->add('state')
-        ;
+            ->add('slug')
+            ->add('metaDescription')
+            ->add('focusKeyword')
+            ->add('metaKeyword')
+            ->add('metaTags')
+            ->add('state');
         $builder->addEventListener(FormEvents::SUBMIT, array($this, 'onSubmit'));
     }
 
-    public function onSubmit(FormEvent $event) {
+    public function onSubmit(FormEvent $event)
+    {
         $seoEntity = $event->getData();
         $form = $event->getForm();
         $locale = $event->getForm()->getConfig()->getName();
         $parentEntity = $form->getRoot()->getData();
-        $generatedSlug = $this->container->get(SeoFormTypeService::class)->checkAndGenerateSlug($parentEntity, $seoEntity, $locale);
+        $generatedSlug = $this->seoFormTypeService->checkAndGenerateSlug($parentEntity,
+            $seoEntity, $locale);
         $seoEntity->getSlug($generatedSlug);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
-            'data_class' => $this->seoTranslationClass
+            'data_class' => $this->seoTranslationClass,
         ));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix() {
+    public function getBlockPrefix(): string
+    {
         return 'pn_bundle_seobundle_seo';
     }
 

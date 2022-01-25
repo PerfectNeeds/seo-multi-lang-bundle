@@ -138,7 +138,7 @@ class SeoSocialsType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'SeoSocialNetworkType';
     }

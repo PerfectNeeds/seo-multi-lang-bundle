@@ -2,6 +2,7 @@
 
 namespace PN\SeoBundle\Form;
 
+use PN\SeoBundle\Entity\SeoBaseRoute;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,9 +12,6 @@ class SeoBaseRouteType extends AbstractType {
 
     private $entitiesNames = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $this->entitiesNames = $options['entitiesNames'];
 
@@ -25,21 +23,10 @@ class SeoBaseRouteType extends AbstractType {
                 ->add('baseRoute');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'PN\SeoBundle\Entity\SeoBaseRoute',
+            'data_class' => SeoBaseRoute::class,
             'entitiesNames' => FALSE,
         ));
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix() {
-        return 'pn_bundle_seobundle_seobaseroute';
-    }
-
 }

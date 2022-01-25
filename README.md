@@ -54,7 +54,6 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new Arxy\EntityTranslationsBundle\ArxyEntityTranslationsBundle(),
         new PN\SeoBundle\PNSeoBundle(),
         new \PN\LocaleBundle\PNLocaleBundle(),
         new \PN\ServiceBundle\PNServiceBundle(),
@@ -187,7 +186,7 @@ doctrine:
    orm:
         # search for the "ResolveTargetEntityListener" class for an article about this
         resolve_target_entities: 
-            Arxy\EntityTranslationsBundle\Model\Language: PN\LocaleBundle\Entity\Language
+            PN\LocaleBundle\Model\Language: PN\LocaleBundle\Entity\Language
             PN\SeoBundle\Entity\Seo: PN\Bundle\SeoBundle\Entity\Seo
 
 pn_seo:
@@ -273,7 +272,7 @@ namespace PN\Bundle\CMSBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use PN\ServiceBundle\Model\DateTimeTrait;
-use Arxy\EntityTranslationsBundle\Model\Translatable;
+use PN\LocaleBundle\Model\Translatable;
 use PN\LocaleBundle\Model\LocaleTrait;
 
 /**
@@ -317,9 +316,6 @@ use PN\SeoBundle\Form\SeoType;
 
 class DynamicPageType extends AbstractType {
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->add('seo', SeoType::class)
@@ -337,8 +333,7 @@ DynamicPageController.php
     /**
      * @Route("/{slug}", name="fe_dynamic_page_show", methods={"GET", "POST"})
      */
-    public function showAction(Request $request, $slug) {
-        $em = $this->getDoctrine()->getManager();
+    public function showAction(Request $request, $slug, EntityManagerInterface $em) {
         $entity = $this->get("fe_seo")->getSlug($request, $slug, new DynamicPage());
         if ($entity instanceof RedirectResponse) {
             return $entity;

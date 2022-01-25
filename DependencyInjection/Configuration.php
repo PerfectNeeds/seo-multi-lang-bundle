@@ -10,12 +10,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/configuration.html}
  */
-class Configuration implements ConfigurationInterface {
+class Configuration implements ConfigurationInterface
+{
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder() {
+    public function getConfigTreeBuilder(): TreeBuilder
+    {
         $treeBuilder = new TreeBuilder('pn_seo');
         $rootNode = $treeBuilder->getRootNode();
 
@@ -23,16 +22,15 @@ class Configuration implements ConfigurationInterface {
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
         $rootNode
-                ->children()
-                ->scalarNode('seo_class')
-                ->isRequired()
-                ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('seo_translation_class')
-                ->isRequired()
-                ->cannotBeEmpty()
-                ->end()
-        ;
+            ->children()
+            ->scalarNode('seo_class')
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()
+            ->scalarNode('seo_translation_class')
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end();
 
         return $treeBuilder;
     }
