@@ -3,42 +3,24 @@
 namespace PN\SeoBundle\Twig;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PN\SeoBundle\Entity\SeoBaseRoute;
+use PN\SeoBundle\Service\SeoBaseRouteService;
 use Twig\Extension\RuntimeExtensionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use PN\ServiceBundle\Utils\General;
 
 class VarsRuntime implements RuntimeExtensionInterface
 {
 
-    private $em;
+    private EntityManagerInterface $em;
+    private SeoBaseRouteService $baseRouteService;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SeoBaseRouteService $baseRouteService)
     {
         $this->em = $em;
+        $this->baseRouteService = $baseRouteService;
     }
 
     public function getBaseRoute($entity)
     {
-        if ($entity == null) {
-            throw new Exception("Error: Seo Entity");
-        }
-        $seoBaseRoute = $this->em->getRepository(SeoBaseRoute::class)->findByEntity($entity, false);
-        if (!$seoBaseRoute) {
-            $entityName = (new \ReflectionClass($entity))->getShortName();
-            $baseRoute = General::fromCamelCaseToUnderscore($entityName);
-
-
-            $seoBaseRoute = new SeoBaseRoute();
-            $seoBaseRoute->setEntityName($entityName);
-            $seoBaseRoute->setBaseRoute($baseRoute);
-            $seoBaseRoute->setCreator("System by twig Extension");
-            $seoBaseRoute->setModifiedBy("System by twig Extension");
-            $this->em->persist($seoBaseRoute);
-            $this->em->flush();
-        }
-
-        return $seoBaseRoute;
+        return $this->baseRouteService->getBaseRoute($entity);
     }
 
     public function backlinks($str)

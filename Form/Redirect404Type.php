@@ -20,17 +20,8 @@ class Redirect404Type extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Redirect404::class,
-        ));
+        ]);
     }
-
-    /**
-     * @return string
-     */
-    public function getBlockPrefix(): string
-    {
-        return 'Redirect404';
-    }
-
 }
