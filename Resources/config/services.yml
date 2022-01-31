@@ -26,6 +26,7 @@ services:
     tags: [ 'doctrine.repository_service' ]
 
   PN\SeoBundle\Service\:
+    public: true
     resource: '../../Service/*'
 
   fe_seo:
