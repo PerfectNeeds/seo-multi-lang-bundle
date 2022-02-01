@@ -3,6 +3,7 @@
 namespace PN\SeoBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PN\SeoBundle\Repository\SeoBaseRouteRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -14,19 +15,21 @@ use Symfony\Component\Routing\RouterInterface;
 class SeoService
 {
 
-    protected $em;
-    protected $context;
-    protected $router;
+    private EntityManagerInterface $em;
+    private RouterInterface $router;
+    private seoBaseRouteRepository $seoBaseRouteRepository;
+    private ParameterBagInterface $parameterBag;
     public $seoClass;
-    protected $parameterBag;
 
     public function __construct(
         EntityManagerInterface $em,
         RouterInterface $router,
-        ParameterBagInterface $parameterBag
+        ParameterBagInterface $parameterBag,
+        SeoBaseRouteRepository $seoBaseRouteRepository
     ) {
         $this->em = $em;
         $this->router = $router;
+        $this->seoBaseRouteRepository = $seoBaseRouteRepository;
         $this->parameterBag = $parameterBag;
         $this->seoClass = $parameterBag->get('pn_seo_class');
     }
@@ -35,7 +38,7 @@ class SeoService
     {
         $em = $this->em;
 
-        $defaultLocale = $this->pa->getParameter('locale');
+        $defaultLocale = $this->parameterBag->get('locale');
         if ($locale == null) {
             $locale = $defaultLocale;
         }
@@ -55,7 +58,7 @@ class SeoService
             throw new \Exception("Please enter a entity class");
         }
         $em = $this->em;
-        $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($entityClass);
+        $seoBaseRoute = $this->seoBaseRouteRepository->findByEntity($entityClass);
 
         $defaultLocale = $this->parameterBag->get('locale');
         $locale = $request->getLocale();
