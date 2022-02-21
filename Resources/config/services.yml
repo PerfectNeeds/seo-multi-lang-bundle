@@ -1,23 +1,29 @@
 services:
-    _defaults:
-        # automatically injects dependencies in your services
-        autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
-        public: true
-        
-    PN\SeoBundle\Twig\:
-        public: false
-        resource: '../../Twig/*'
-    PN\SeoBundle\Form\:
-        public: false
-        resource: '../../Form/*'
-    PN\SeoBundle\Controller\:
-        public: false
-        resource: '../../Controller/*'
-    PN\SeoBundle\Service\:
-        resource: '../../Service/*'
-    fe_seo:
-        class:        PN\SeoBundle\Service\SeoService
+  _defaults:
+    # automatically injects dependencies in your services
+    autowire: true
+    # automatically registers your services as commands, event subscribers, etc.
+    autoconfigure: true
+    # this means you cannot fetch services directly from the container via $container->get()
+    # if you need to do this, you can override this setting on individual services
+    public: true
+
+  PN\SeoBundle\Twig\:
+    public: false
+    resource: '../../Twig/*'
+  PN\SeoBundle\Form\:
+    public: false
+    resource: '../../Form/*'
+  PN\SeoBundle\Controller\:
+    public: false
+    resource: '../../Controller/*'
+  PN\SeoBundle\Service\:
+    resource: '../../Service/*'
+
+  fe_seo:
+    class: PN\SeoBundle\Service\SeoService
+
+  pn_seo.listener.redirect:
+    class: PN\SeoBundle\Listener\RedirectListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

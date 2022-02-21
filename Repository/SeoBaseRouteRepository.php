@@ -6,20 +6,23 @@ use Doctrine\ORM\EntityRepository;
 use PN\ServiceBundle\Utils\SQL;
 use PN\ServiceBundle\Utils\Validate;
 
-class SeoBaseRouteRepository extends EntityRepository {
+class SeoBaseRouteRepository extends EntityRepository
+{
 
-    public function findByEntity($entity, $error = true) {
+    public function findByEntity($entity, $error = true)
+    {
         $entityName = (new \ReflectionClass($entity))->getShortName();
-        $seoBaseRoute = $this->findOneBy(["entityName"=>$entityName]);
+        $seoBaseRoute = $this->findOneBy(["entityName" => $entityName]);
 
-        if (!$seoBaseRoute AND $error == true) {
+        if (!$seoBaseRoute and $error == true) {
             throw new \Exception("Can't find SeoBaseRoute");
         }
 
         return $seoBaseRoute;
     }
 
-    public function filter($search, $count = FALSE, $startLimit = NULL, $endLimit = NULL) {
+    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    {
 
         $sortSQL = [
             0 => 'sb.entity_name',
@@ -27,12 +30,12 @@ class SeoBaseRouteRepository extends EntityRepository {
             2 => 'sb.created',
         ];
         $connection = $this->getEntityManager()->getConnection();
-        $where = FALSE;
+        $where = false;
         $clause = '';
 
         $searchFiltered = new \stdClass();
         foreach ($search as $key => $value) {
-            if (Validate::not_null($value) AND ! is_array($value)) {
+            if (Validate::not_null($value) and !is_array($value)) {
                 $searchFiltered->{$key} = substr($connection->quote($value), 1, -1);
             } else {
                 $searchFiltered->{$key} = $value;
@@ -40,7 +43,7 @@ class SeoBaseRouteRepository extends EntityRepository {
         }
 
 
-        if (isset($searchFiltered->string) AND $searchFiltered->string) {
+        if (isset($searchFiltered->string) and $searchFiltered->string) {
 
             if (SQL::validateSS($searchFiltered->string)) {
                 $where = ($where) ? ' AND ( ' : ' WHERE ( ';
@@ -55,37 +58,37 @@ class SeoBaseRouteRepository extends EntityRepository {
             $sqlInner = "SELECT count(sb.id) as `count` FROM seo_base_route sb ";
 
             $statement = $connection->prepare($sqlInner);
-            $statement->execute();
-            return $queryResult = $statement->fetchColumn();
+
+            return $statement->executeQuery()->fetchOne();
         }
-//----------------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------------------------------------------------------
         $sql = "SELECT sb.id FROM seo_base_route sb";
         $sql .= $clause;
 
-        if (isset($searchFiltered->ordr) AND Validate::not_null($searchFiltered->ordr)) {
+        if (isset($searchFiltered->ordr) and Validate::not_null($searchFiltered->ordr)) {
             $dir = $searchFiltered->ordr['dir'];
             $columnNumber = $searchFiltered->ordr['column'];
-            if (isset($columnNumber) AND array_key_exists($columnNumber, $sortSQL)) {
-                $sql .= " ORDER BY " . $sortSQL[$columnNumber] . " $dir";
+            if (isset($columnNumber) and array_key_exists($columnNumber, $sortSQL)) {
+                $sql .= " ORDER BY ".$sortSQL[$columnNumber]." $dir";
             }
         } else {
             $sql .= ' ORDER BY sb.id DESC';
         }
 
 
-        if ($startLimit !== NULL AND $endLimit !== NULL) {
-            $sql .= " LIMIT " . $startLimit . ", " . $endLimit;
+        if ($startLimit !== null and $endLimit !== null) {
+            $sql .= " LIMIT ".$startLimit.", ".$endLimit;
         }
 
         $statement = $connection->prepare($sql);
-        $statement->execute();
-        $filterResult = $statement->fetchAll();
+        $filterResult = $statement->executeQuery()->fetchAllAssociative();
         $result = array();
 
         foreach ($filterResult as $key => $r) {
             $result[] = $this->find($r['id']);
         }
-//-----------------------------------------------------------------------------------------------------------------------
+
+        //-----------------------------------------------------------------------------------------------------------------------
         return $result;
     }
 

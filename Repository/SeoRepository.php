@@ -17,9 +17,8 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("seoId", $seoId);
         $statement->bindValue("deleted", false);
-        $statement->execute();
 
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }
@@ -148,9 +147,7 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoId", $seoId);
         $statement->bindValue("deleted", false);
 
-        $statement->execute();
-
-        $queryResult = $statement->fetchAll();
+        $queryResult = $statement->executeQuery()->fetchAllAssociative();
 
         $result = array();
         foreach ($queryResult as $key => $r) {
@@ -172,9 +169,8 @@ class SeoRepository extends EntityRepository
         $statement = $connection->prepare($sql);
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("slug", $slug);
-        $statement->execute();
 
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }
@@ -196,9 +192,8 @@ class SeoRepository extends EntityRepository
         $statement->bindValue("seoBaseRouteId", $seoBaseRouteId);
         $statement->bindValue("slug", $slug);
         $statement->bindValue("locale", $locale);
-        $statement->execute();
 
-        $queryResult = $statement->fetchColumn();
+        $queryResult = $statement->executeQuery()->fetchOne();
         if (!$queryResult) {
             return null;
         }
