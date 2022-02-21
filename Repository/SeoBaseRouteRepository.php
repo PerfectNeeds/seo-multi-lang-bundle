@@ -87,7 +87,7 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
         }
 
         $statement = $connection->prepare($sql);
-        $filterResult = $statement->execute()->fetchAllAssociative();
+        $filterResult = $statement->executeQuery()->fetchAllAssociative();
         $result = $ids = [];
 
         foreach ($filterResult as $key => $r) {

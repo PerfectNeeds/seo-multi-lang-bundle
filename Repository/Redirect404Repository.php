@@ -3,6 +3,7 @@
 namespace PN\SeoBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PN\SeoBundle\Entity\Redirect404;
 use PN\ServiceBundle\Utils\SQL;
@@ -21,78 +22,78 @@ class Redirect404Repository extends ServiceEntityRepository
         parent::__construct($registry, Redirect404::class);
     }
 
-    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    private function getStatement()
     {
+        return $this->createQueryBuilder('t');
+    }
 
+    private function filterOrder(QueryBuilder $statement, \stdClass $search)
+    {
         $sortSQL = [
-            0 => 'r.from',
-            1 => 'r.to',
-            2 => 'r.created',
+            't.id',
+            't.from',
+            't.to',
+            't.created',
         ];
-        $connection = $this->getEntityManager()->getConnection();
-        $where = false;
-        $clause = '';
 
-        $searchFiltered = new \stdClass();
-        foreach ($search as $key => $value) {
-            if (Validate::not_null($value) and !is_array($value)) {
-                $searchFiltered->{$key} = substr($connection->quote($value), 1, -1);
-            } else {
-                $searchFiltered->{$key} = $value;
-            }
-        }
-
-
-        if (isset($searchFiltered->string) and $searchFiltered->string) {
-
-            if (SQL::validateSS($searchFiltered->string)) {
-                $where = ($where) ? ' AND ( ' : ' WHERE ( ';
-                $clause .= SQL::searchSCG($searchFiltered->string, 'r.id', $where);
-                $clause .= SQL::searchSCG($searchFiltered->string, 'r.from', ' OR ');
-                $clause .= SQL::searchSCG($searchFiltered->string, 'r.to', ' OR ');
-
-                $clause .= " ) ";
-            }
-        }
-
-        if ($count) {
-            $sqlInner = "SELECT count(r.id) as `count` FROM redirect_404 r ";
-
-            $statement = $connection->prepare($sqlInner);
-
-            return $queryResult = $statement->executeQuery()->fetchOne();
-        }
-
-        $sql = "SELECT r.id FROM redirect_404 r";
-        $sql .= $clause;
-
-        if (isset($searchFiltered->ordr) and Validate::not_null($searchFiltered->ordr)) {
-            $dir = $searchFiltered->ordr['dir'];
-            $columnNumber = $searchFiltered->ordr['column'];
-            if (isset($columnNumber) and array_key_exists($columnNumber, $sortSQL)) {
-                $sql .= " ORDER BY ".$sortSQL[$columnNumber]." $dir";
+        if (isset($search->ordr) AND Validate::not_null($search->ordr)) {
+            $dir = $search->ordr['dir'];
+            $columnNumber = $search->ordr['column'];
+            if (isset($columnNumber) AND array_key_exists($columnNumber, $sortSQL)) {
+                $statement->addOrderBy($sortSQL[$columnNumber], $dir);
             }
         } else {
-            $sql .= ' ORDER BY r.id DESC';
+            $statement->addOrderBy($sortSQL[1]);
+        }
+    }
+
+    private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
+    {
+        if (isset($search->string) AND Validate::not_null($search->string)) {
+            $statement->andWhere('t.id LIKE :searchTerm '
+                .'OR t.from LIKE :searchTerm '
+                .'OR t.to LIKE :searchTerm '
+            );
+            $statement->setParameter('searchTerm', '%'.trim($search->string).'%');
+        }
+    }
+
+    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null)
+    {
+        if ($startLimit === null OR $endLimit === null) {
+            return false;
+        }
+        $statement->setFirstResult($startLimit)
+            ->setMaxResults($endLimit);
+    }
+
+    private function filterCount(QueryBuilder $statement)
+    {
+        $statement->select("COUNT(DISTINCT t.id)");
+        $statement->setMaxResults(1);
+
+        $count = $statement->getQuery()->getOneOrNullResult();
+        if (is_array($count) and count($count) > 0) {
+            return (int)reset($count);
         }
 
-        if ($startLimit !== null and $endLimit !== null) {
-            $sql .= " LIMIT ".$startLimit.", ".$endLimit;
+        return 0;
+    }
+
+    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    {
+        $statement = $this->getStatement();
+        $this->filterWhereClause($statement, $search);
+
+        if ($count == true) {
+            return $this->filterCount($statement);
         }
 
-        $statement = $connection->prepare($sql);
-        $filterResult = $statement->executeQuery()->fetchAllAssociative();
-        $result = $ids = [];
+        $statement->groupBy('t.id');
+        $this->filterPagination($statement, $startLimit, $endLimit);
+        $this->filterOrder($statement, $search);
 
-        foreach ($filterResult as $key => $r) {
-            $ids[] = $r['id'];
-        }
-
-        if (count($ids) > 0) {
-            return $this->findBy(["id" => $ids]);
-        }
-
-        return $result;
+        return $statement->getQuery()->execute();
     }
 
 }

@@ -29,6 +29,11 @@ services:
     public: true
     resource: '../../Service/*'
 
+  pn.seo.listener.redirect:
+    class: PN\SeoBundle\Listener\RedirectListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
   fe_seo:
     public: true
     class: PN\SeoBundle\Service\SeoService
