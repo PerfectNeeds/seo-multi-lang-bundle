@@ -114,7 +114,7 @@ use PN\SeoBundle\Model\SeoTrait;
 /**
  * Seo
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table("seo", uniqueConstraints={@UniqueConstraint(name="slug_unique", columns={"slug", "seo_base_route_id"})})
+ * @ORM\Table("seo", uniqueConstraints={@UniqueConstraint(name="slug_unique", columns={"slug", "seo_base_route_id", "deleted"})})
  * @ORM\Entity(repositoryClass="PN\Bundle\SeoBundle\Repository\SeoRepository")
  */
 class Seo extends BaseSeo {
