@@ -3,9 +3,9 @@
 namespace PN\SeoBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PN\SeoBundle\Entity\SeoBaseRoute;
-use PN\ServiceBundle\Utils\SQL;
 use PN\ServiceBundle\Utils\Validate;
 
 class SeoBaseRouteRepository extends ServiceEntityRepository
@@ -26,79 +26,76 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
 
         return $seoBaseRoute;
     }
+    private function getStatement()
+    {
+        return $this->createQueryBuilder('t');
+    }
+
+    private function filterOrder(QueryBuilder $statement, \stdClass $search)
+    {
+        $sortSQL = [
+            't.entityName',
+            't.baseRoute',
+            't.created',
+        ];
+
+        if (isset($search->ordr) and Validate::not_null($search->ordr)) {
+            $dir = $search->ordr['dir'];
+            $columnNumber = $search->ordr['column'];
+            if (isset($columnNumber) and array_key_exists($columnNumber, $sortSQL)) {
+                $statement->addOrderBy($sortSQL[$columnNumber], $dir);
+            }
+        } else {
+            $statement->addOrderBy($sortSQL[1]);
+        }
+    }
+
+    private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
+    {
+        if (isset($search->string) and Validate::not_null($search->string)) {
+            $statement->andWhere('t.id LIKE :searchTerm '
+                .'OR t.entityName LIKE :searchTerm '
+                .'OR t.baseRoute LIKE :searchTerm '
+            );
+            $statement->setParameter('searchTerm', '%'.trim($search->string).'%');
+        }
+    }
+
+    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null)
+    {
+        if ($startLimit === null or $endLimit === null) {
+            return false;
+        }
+        $statement->setFirstResult($startLimit)
+            ->setMaxResults($endLimit);
+    }
+
+    private function filterCount(QueryBuilder $statement)
+    {
+        $statement->select("COUNT(DISTINCT t.id)");
+        $statement->setMaxResults(1);
+
+        $count = $statement->getQuery()->getOneOrNullResult();
+        if (is_array($count) and count($count) > 0) {
+            return (int)reset($count);
+        }
+
+        return 0;
+    }
 
     public function filter($search, $count = false, $startLimit = null, $endLimit = null)
     {
+        $statement = $this->getStatement();
+        $this->filterWhereClause($statement, $search);
 
-        $sortSQL = [
-            0 => 'sb.entity_name',
-            1 => 'sb.base_route',
-            2 => 'sb.created',
-        ];
-        $connection = $this->getEntityManager()->getConnection();
-        $where = false;
-        $clause = '';
-
-        $searchFiltered = new \stdClass();
-        foreach ($search as $key => $value) {
-            if (Validate::not_null($value) and !is_array($value)) {
-                $searchFiltered->{$key} = substr($connection->quote($value), 1, -1);
-            } else {
-                $searchFiltered->{$key} = $value;
-            }
+        if ($count == true) {
+            return $this->filterCount($statement);
         }
 
+        $statement->groupBy('t.id');
+        $this->filterPagination($statement, $startLimit, $endLimit);
+        $this->filterOrder($statement, $search);
 
-        if (isset($searchFiltered->string) and $searchFiltered->string) {
-
-            if (SQL::validateSS($searchFiltered->string)) {
-                $where = ($where) ? ' AND ( ' : ' WHERE ( ';
-                $clause .= SQL::searchSCG($searchFiltered->string, 'sb.id', $where);
-                $clause .= SQL::searchSCG($searchFiltered->string, 'sb.entity_name', ' OR ');
-                $clause .= SQL::searchSCG($searchFiltered->string, 'sb.base_route', ' OR ');
-                $clause .= " ) ";
-            }
-        }
-
-        if ($count) {
-            $sqlInner = "SELECT count(sb.id) as `count` FROM seo_base_route sb ";
-
-            $statement = $connection->prepare($sqlInner);
-
-            return $queryResult = $statement->executeQuery()->fetchOne();
-        }
-        //----------------------------------------------------------------------------------------------------------------------------------------------------
-        $sql = "SELECT sb.id FROM seo_base_route sb";
-        $sql .= $clause;
-
-        if (isset($searchFiltered->ordr) and Validate::not_null($searchFiltered->ordr)) {
-            $dir = $searchFiltered->ordr['dir'];
-            $columnNumber = $searchFiltered->ordr['column'];
-            if (isset($columnNumber) and array_key_exists($columnNumber, $sortSQL)) {
-                $sql .= " ORDER BY ".$sortSQL[$columnNumber]." $dir";
-            }
-        } else {
-            $sql .= ' ORDER BY sb.id DESC';
-        }
-
-
-        if ($startLimit !== null and $endLimit !== null) {
-            $sql .= " LIMIT ".$startLimit.", ".$endLimit;
-        }
-
-        $statement = $connection->prepare($sql);
-        $filterResult = $statement->executeQuery()->fetchAllAssociative();
-        $result = $ids = [];
-
-        foreach ($filterResult as $key => $r) {
-            $ids[] = $r['id'];
-        }
-
-        if (count($ids) > 0) {
-            return $this->findBy(["id" => $ids]);
-        }
-
-        return $result;
+        return $statement->getQuery()->execute();
     }
-
 }
