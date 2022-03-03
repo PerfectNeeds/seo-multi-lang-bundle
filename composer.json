@@ -4,6 +4,7 @@
     "keywords": ["PerfectNeeds", "Seo Bundle"],
     "homepage": "http://perfectneeds.github.com",
     "type": "symfony-library",
+    "license":     "MIT",
     "authors": [
         {
             "name": "Peter Nassef",
