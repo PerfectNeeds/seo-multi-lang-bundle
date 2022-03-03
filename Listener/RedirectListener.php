@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Entity\Redirect404;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class RedirectListener
@@ -19,9 +20,9 @@ class RedirectListener
         $this->em = $em;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
-        if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+        if ($event->isMainRequest()) {
             $url = $event->getRequest()->getUri();
             if (strpos($url, "/admin/") === false) {
                 $redirectPage = $this->em->getRepository(Redirect404::class)->findOneBy(["from" => $url]);
