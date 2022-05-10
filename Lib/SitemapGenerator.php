@@ -10,33 +10,51 @@ namespace PN\SeoBundle\Lib;
  */
 class SitemapGenerator
 {
-
     /**
-     *
      * @var \XMLWriter
      */
     private $writer;
-
+    private $domain;
     private $path;
-
     private $fileName = 'sitemap';
-
     private $current_item = 0;
-
     private $current_sitemap = 0;
-
     const EXT = '.xml';
-
     const SCHEMA = 'http://www.sitemaps.org/schemas/sitemap/0.9';
-
     const DEFAULT_PRIORITY = 0.5;
-
-    const ITEM_PER_SITEMAP = 50000;
-
+    const ITEM_PER_SITEMAP = 40000;
     const SEPERATOR = '-';
-
     const INDEX_SUFFIX = 'index';
 
+    /**
+     * @param string $domain
+     */
+    public function __construct($domain)
+    {
+        $this->setDomain($domain);
+    }
+
+    /**
+     * Sets root path of the website, starting with http:// or https://
+     *
+     * @param string $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Returns root path of the website
+     *
+     * @return string
+     */
+    private function getDomain()
+    {
+        return $this->domain;
+    }
 
     /**
      * Returns \XMLWriter object instance
@@ -163,14 +181,10 @@ class SitemapGenerator
     /**
      * Adds an item to the sitemap
      *
-     * @param string $loc
-     *            URL of the page. This value must be less than 2,048 characters.
-     * @param string $priority
-     *            The priority of this URL relative to other URLs on your SiteMapService. Valid values range from 0.0 to 1.0.
-     * @param string $changefreq
-     *            How frequently the page is likely to change. Valid values are always, hourly, daily, weekly, monthly, yearly and never.
-     * @param string|int $lastmod
-     *            The date of last modification of URL. Unix timestamp or any English textual DateTime description.
+     * @param string $loc URL of the page. This value must be less than 2,048 characters.
+     * @param string $priority The priority of this URL relative to other URLs on your SiteMapService. Valid values range from 0.0 to 1.0.
+     * @param string $changefreq How frequently the page is likely to change. Valid values are always, hourly, daily, weekly, monthly, yearly and never.
+     * @param string|int $lastmod The date of last modification of URL. Unix timestamp or any English textual DateTime description.
      * @return SitemapGenerator
      */
     public function addItem($loc, $priority = self::DEFAULT_PRIORITY, $changefreq = null, $lastmod = null)
@@ -206,8 +220,7 @@ class SitemapGenerator
     /**
      * Prepares given a date for sitemap
      *
-     * @param string $date
-     *            Unix timestamp or any English textual datetime description
+     * @param string $date Unix timestamp or any English textual datetime description
      * @return ISO8601 format.
      */
     private function getLastModifiedDate($date)
@@ -236,10 +249,7 @@ class SitemapGenerator
     /**
      * Writes Google sitemap index for generated sitemap files
      *
-     * @param string $loc
-     *            Accessible URL path of sitemaps
-     * @param string|int $lastmod
-     *            The date of last modification of sitemap. Unix timestamp or any English textual datetime description.
+     * @param string|int $lastmod The date of last modification of sitemap. Unix timestamp or any English textual datetime description.
      */
     public function createSitemapIndex($lastmod = 'Today')
     {
@@ -252,7 +262,9 @@ class SitemapGenerator
         $indexwriter->writeAttribute('xmlns', self::SCHEMA);
         for ($index = 0; $index < $this->getCurrentSitemap(); $index++) {
             $indexwriter->startElement('sitemap');
-            $indexwriter->writeElement('loc', $this->getFileName().($index ? self::SEPERATOR.$index : '').self::EXT);
+            $indexwriter->writeElement('loc',
+                rtrim($this->getDomain(),
+                    "/")."/".$this->getFileName().($index ? self::SEPERATOR.$index : '').self::EXT);
             $indexwriter->writeElement('lastmod', $this->getLastModifiedDate($lastmod));
             $indexwriter->endElement();
         }
