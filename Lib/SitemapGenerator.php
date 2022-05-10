@@ -15,27 +15,47 @@ class SitemapGenerator
      * @var \XMLWriter
      */
     private $writer;
-
+    private $domain;
     private $path;
-
     private $fileName = 'sitemap';
-
     private $current_item = 0;
-
     private $current_sitemap = 0;
-
     const EXT = '.xml';
-
     const SCHEMA = 'http://www.sitemaps.org/schemas/sitemap/0.9';
-
     const DEFAULT_PRIORITY = 0.5;
-
     const ITEM_PER_SITEMAP = 50000;
-
     const SEPERATOR = '-';
-
     const INDEX_SUFFIX = 'index';
 
+    /**
+     * @param string $domain
+     */
+    public function __construct($domain)
+    {
+        $this->setDomain($domain);
+    }
+
+    /**
+     * Sets root path of the website, starting with http:// or https://
+     *
+     * @param string $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Returns root path of the website
+     *
+     * @return string
+     */
+    private function getDomain()
+    {
+        return $this->domain;
+    }
 
     /**
      * Returns \XMLWriter object instance
@@ -234,7 +254,6 @@ class SitemapGenerator
     /**
      * Writes Google sitemap index for generated sitemap files
      *
-     * @param string $loc Accessible URL path of sitemaps
      * @param string|int $lastmod The date of last modification of sitemap. Unix timestamp or any English textual datetime description.
      */
     public function createSitemapIndex($lastmod = 'Today'): void
@@ -248,7 +267,8 @@ class SitemapGenerator
         $indexwriter->writeAttribute('xmlns', self::SCHEMA);
         for ($index = 0; $index < $this->getCurrentSitemap(); $index++) {
             $indexwriter->startElement('sitemap');
-            $indexwriter->writeElement('loc', $this->getFileName().($index ? self::SEPERATOR.$index : '').self::EXT);
+            $indexwriter->writeElement('loc', rtrim($this->getDomain(),
+                    "/")."/".$this->getFileName().($index ? self::SEPERATOR.$index : '').self::EXT);
             $indexwriter->writeElement('lastmod', $this->getLastModifiedDate($lastmod));
             $indexwriter->endElement();
         }
