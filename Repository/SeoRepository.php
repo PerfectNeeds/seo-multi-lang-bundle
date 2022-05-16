@@ -134,7 +134,7 @@ class SeoRepository extends ServiceEntityRepository
         $statement = $connection->prepare($sql);
         $statement->bindValue("entityName", $entityName);
 
-        return $statement->executeQuery()->fetchFirstColumn();
+        return $statement->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -157,6 +157,6 @@ class SeoRepository extends ServiceEntityRepository
         $statement->bindValue("entityName", $entityName);
         $statement->bindValue("locale", $locale);
 
-        return $statement->executeQuery()->fetchFirstColumn();
+        return $statement->executeQuery()->fetchAllAssociative();
     }
 }
