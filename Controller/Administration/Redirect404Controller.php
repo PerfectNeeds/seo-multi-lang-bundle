@@ -3,6 +3,7 @@
 namespace PN\SeoBundle\Controller\Administration;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PN\SeoBundle\Repository\Redirect404Repository;
 use PN\ServiceBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,7 +112,7 @@ class Redirect404Controller extends AbstractController
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="redirect404_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request, EntityManagerInterface $em)
+    public function dataTableAction(Request $request, EntityManagerInterface $em, Redirect404Repository $redirect404Repository)
     {
 
         $srch = $request->query->all("search");
@@ -123,8 +124,8 @@ class Redirect404Controller extends AbstractController
         $search->string = $srch['value'];
         $search->ordr = $ordr[0];
 
-        $count = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, true);
-        $redirect404s = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, false, $start, $length);
+        $count = $redirect404Repository->filter($search, true);
+        $redirect404s = $redirect404Repository->filter($search, false, $start, $length);
 
         return $this->render('@PNSeo/Administration/Redirect404/datatable.json.twig', array(
                 "recordsTotal" => $count,

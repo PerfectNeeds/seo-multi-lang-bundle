@@ -4,6 +4,7 @@ namespace PN\SeoBundle\Controller\Administration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Form\SeoBaseRouteType;
+use PN\SeoBundle\Repository\SeoBaseRouteRepository;
 use PN\ServiceBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -108,7 +109,7 @@ class SeoBaseRouteController extends AbstractController
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="seobaseroute_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request, EntityManagerInterface $em)
+    public function dataTableAction(Request $request, EntityManagerInterface $em, SeoBaseRouteRepository $baseRouteRepository)
     {
         $srch = $request->query->all("search");
         $start = $request->query->getInt("start");
@@ -119,8 +120,8 @@ class SeoBaseRouteController extends AbstractController
         $search->string = $srch['value'];
         $search->ordr = $ordr[0];
 
-        $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, true);
-        $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, false, $start, $length);
+        $count = $baseRouteRepository->filter($search, true);
+        $seoBaseRoutes = $baseRouteRepository->filter($search, false, $start, $length);
 
         return $this->render("@PNSeo/Administration/SeoBaseRoute/datatable.json.twig", [
                 "recordsTotal" => $count,
