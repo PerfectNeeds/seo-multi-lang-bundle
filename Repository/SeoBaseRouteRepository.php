@@ -2,8 +2,9 @@
 
 namespace PN\SeoBundle\Repository;
 
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\ServiceBundle\Utils\Validate;
 
 class SeoBaseRouteRepository extends EntityRepository
@@ -11,8 +12,13 @@ class SeoBaseRouteRepository extends EntityRepository
 
     public function findByEntity($entity, $error = true)
     {
-        $entityName = (new \ReflectionClass($entity))->getShortName();
+        $entityName = (new \ReflectionClass($entity))->getName();
         $seoBaseRoute = $this->findOneBy(["entityName" => $entityName]);
+
+        if (!$seoBaseRoute instanceof SeoBaseRoute) {
+            $entityName = (new \ReflectionClass($entity))->getShortName();
+            $seoBaseRoute = $this->findOneBy(["entityName" => $entityName]);
+        }
 
         if (!$seoBaseRoute and $error == true) {
             throw new \Exception("Can't find SeoBaseRoute");

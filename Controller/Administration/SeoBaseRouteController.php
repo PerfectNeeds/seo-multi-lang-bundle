@@ -2,26 +2,27 @@
 
 namespace PN\SeoBundle\Controller\Administration;
 
+use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\SeoBundle\Form\SeoBaseRouteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use PN\SeoBundle\Entity\SeoBaseRoute;
 use Symfony\Component\HttpFoundation\Request;
-use PN\ServiceBundle\Service\CommonFunctionService;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Seobaseroute controller.
  *
  * @Route("base-route")
  */
-class SeoBaseRouteController extends Controller {
+class SeoBaseRouteController extends Controller
+{
 
     /**
      * Lists all seoBaseRoute entities.
      *
      * @Route("/", name="seobaseroute_index", methods={"GET"})
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         return $this->render('@PNSeo/Administration/SeoBaseRoute/index.html.twig');
     }
 
@@ -30,7 +31,8 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/new", name="seobaseroute_new", methods={"GET", "POST"})
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
         $entities = $this->getEntitiesHasSeoEntity();
@@ -53,10 +55,10 @@ class SeoBaseRouteController extends Controller {
         }
 
         return $this->render('@PNSeo/Administration/SeoBaseRoute/new.html.twig', [
-                    'seoBaseRoute' => $seoBaseRoute,
-                    'form' => $form->createView(),
-                    'entities' => $entities,
-                        ]
+                'seoBaseRoute' => $seoBaseRoute,
+                'form' => $form->createView(),
+                'entities' => $entities,
+            ]
         );
     }
 
@@ -65,7 +67,8 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/{id}/edit", name="seobaseroute_edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, SeoBaseRoute $seoBaseRoute) {
+    public function editAction(Request $request, SeoBaseRoute $seoBaseRoute)
+    {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
 
@@ -85,9 +88,9 @@ class SeoBaseRouteController extends Controller {
         }
 
         return $this->render('@PNSeo/Administration/SeoBaseRoute/edit.html.twig', [
-                    'seoBaseRoute' => $seoBaseRoute,
-                    'edit_form' => $editForm->createView(),
-                        ]
+                'seoBaseRoute' => $seoBaseRoute,
+                'edit_form' => $editForm->createView(),
+            ]
         );
     }
 
@@ -96,7 +99,8 @@ class SeoBaseRouteController extends Controller {
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="seobaseroute_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request) {
+    public function dataTableAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $srch = $request->query->get("search");
@@ -108,19 +112,65 @@ class SeoBaseRouteController extends Controller {
         $search->string = $srch['value'];
         $search->ordr = $ordr[0];
 
-        $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, TRUE);
-        $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, FALSE, $start, $length);
+        $count = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, true);
+        $seoBaseRoutes = $em->getRepository('PNSeoBundle:SeoBaseRoute')->filter($search, false, $start, $length);
+        foreach ($seoBaseRoutes as $seoBaseRoute) {
+            $fullEntityName = $this->convertShortEntityNameToFullName($seoBaseRoute->getEntityName());
+            if ($fullEntityName !== null) {
+                $seoBaseRoute->setEntityName($fullEntityName);
+                $em->persist($seoBaseRoute);
+                $em->flush();
+            }
+        }
 
         return $this->render("@PNSeo/Administration/SeoBaseRoute/datatable.json.twig", [
-                    "recordsTotal" => $count,
-                    "recordsFiltered" => $count,
-                    "seoBaseRoutes" => $seoBaseRoutes,
-                        ]
+                "recordsTotal" => $count,
+                "recordsFiltered" => $count,
+                "seoBaseRoutes" => $seoBaseRoutes,
+            ]
         );
     }
 
-    private function getEntitiesHasSeoEntity() {
-        return $this->get(CommonFunctionService::class)->getEntitiesWithObject('seo', ["SeoSocial"]);
+    private function getEntitiesHasSeoEntity()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = [];
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if (array_key_exists("seo", $m->getAssociationMappings())) {
+                $entityNames = (new \ReflectionClass($m->getName()))->getName();
+                if (!in_array($entityNames, ["SeoSocial"])) {
+                    $entities[$entityNames] = $entityNames;
+                }
+            }
+        }
+
+        return $entities;
+    }
+
+    private function convertShortEntityNameToFullName($entityName)
+    {
+        if (substr_count($entityName, '\\') > 0) {
+            return null;
+        }
+        $fullEntityName = null;
+
+        $em = $this->getDoctrine()->getManager();
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if (array_key_exists("seo", $m->getAssociationMappings())) {
+                if (substr($m->getName(), -1 * strlen($entityName) - 1) == '\\'.$entityName) {
+                    $fullEntityName = $m->getName();
+                }
+            }
+
+
+        }
+        if ($fullEntityName != null) {
+            return $fullEntityName;
+        }
+
+        return null;
     }
 
 }

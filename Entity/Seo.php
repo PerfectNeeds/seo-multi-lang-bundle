@@ -96,21 +96,6 @@ abstract class Seo implements Translatable {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function getRelationalEntity() {
-        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "metaTags", "state", "lastModified", "deleted", "seoSocials", "translations", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
-
-        $allObjects = get_object_vars($this);
-        foreach ($allObjects as $objectName => $objectValue) {
-            if (in_array($objectName, $excludeMethods)) {
-                continue;
-            }
-            if ($objectValue != NULL) {
-                return $objectValue;
-            }
-        }
-        return NULL;
-    }
-
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *

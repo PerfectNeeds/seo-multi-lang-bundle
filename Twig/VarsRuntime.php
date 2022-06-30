@@ -25,9 +25,10 @@ class VarsRuntime implements RuntimeExtensionInterface {
             $entityName = (new \ReflectionClass($entity))->getShortName();
             $baseRoute = General::fromCamelCaseToUnderscore($entityName);
 
+            $entityFullName = (new \ReflectionClass($entity))->getName();
 
             $seoBaseRoute = new \PN\SeoBundle\Entity\SeoBaseRoute();
-            $seoBaseRoute->setEntityName($entityName);
+            $seoBaseRoute->setEntityName($entityFullName);
             $seoBaseRoute->setBaseRoute($baseRoute);
             $seoBaseRoute->setCreator("System by twig Extension");
             $seoBaseRoute->setModifiedBy("System by twig Extension");

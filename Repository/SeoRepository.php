@@ -124,7 +124,7 @@ class SeoRepository extends EntityRepository
      */
     public function getSeoForSitemap($entity)
     {
-        $entityName = (new \ReflectionClass($entity))->getShortName();
+        $entityName = (new \ReflectionClass($entity))->getName();
         $sql = "SELECT s.slug, s.last_modified FROM seo s LEFT JOIN seo_base_route sbr ON sbr.id=s.seo_base_route_id WHERE s.deleted = 0 AND sbr.entity_name=:entityName";
         $connection = $this->getEntityManager()->getConnection();
         $statement = $connection->prepare($sql);
@@ -142,7 +142,7 @@ class SeoRepository extends EntityRepository
      */
     public function getSeoForSitemapByLang($entity, $locale)
     {
-        $entityName = (new \ReflectionClass($entity))->getShortName();
+        $entityName = (new \ReflectionClass($entity))->getName();
         $sql = "SELECT st.slug, s.last_modified FROM seo_translations st "
             ."LEFT JOIN seo s ON s.id=st.translatable_id "
             ."LEFT JOIN `language` l ON l.id=st.language_id "
