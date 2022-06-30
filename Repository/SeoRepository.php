@@ -13,6 +13,9 @@ class SeoRepository extends EntityRepository
         $fullEntityName = (new \ReflectionClass($entity))->getShortName();
 
         return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
+            ->leftJoin('s.translations', 'st')
             ->leftJoin("s.seoBaseRoute", "sbr")
             ->andWhere("s.slug = :slug")
             ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
@@ -109,6 +112,8 @@ class SeoRepository extends EntityRepository
         $fullEntityName = (new \ReflectionClass($entity))->getShortName();
 
         return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
             ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->andWhere("s.deleted = 0")
@@ -128,6 +133,8 @@ class SeoRepository extends EntityRepository
         $fullEntityName = (new \ReflectionClass($entity))->getShortName();
 
         return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
             ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->leftJoin("st.language", "l")
