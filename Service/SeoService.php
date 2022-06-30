@@ -37,7 +37,7 @@ class SeoService
 
     }
 
-    private function checkSlugIfExist(SeoBaseRoute $seoBaseRoute, $slug, $locale = null)
+    private function checkSlugIfExist($entityClass, $slug, $locale = null)
     {
         $em = $this->em;
 
@@ -45,13 +45,11 @@ class SeoService
         if ($locale == null) {
             $locale = $defaultLocale;
         }
+
         if ($locale == $defaultLocale) {
-            return $em->getRepository($this->seoClass)->findOneBy([
-                'slug' => $slug,
-                'seoBaseRoute' => $seoBaseRoute->getId(),
-            ]);
+            return $em->getRepository($this->seoClass)->findOneBySlugAndEntity($slug, $entityClass);
         } else {
-            return $em->getRepository($this->seoClass)->findOneSeoByLocale($seoBaseRoute->getId(), $slug, $locale);
+            return $em->getRepository($this->seoClass)->findOneSeoByLocale($entityClass, $slug, $locale);
         }
     }
 
@@ -61,12 +59,10 @@ class SeoService
             throw new \Exception("Please enter a entity class");
         }
         $em = $this->em;
-        $seoBaseRoute = $em->getRepository('PNSeoBundle:SeoBaseRoute')->findByEntity($entityClass);
-
         $defaultLocale = $this->container->getParameter('locale');
         $locale = $request->getLocale();
 
-        $seoEntityDefaultLocale = $this->checkSlugIfExist($seoBaseRoute, $slug, $defaultLocale);
+        $seoEntityDefaultLocale = $this->checkSlugIfExist($entityClass, $slug, $defaultLocale);
 
         if ($seoEntityDefaultLocale) {
             $entity = $this->getRelationalEntity($seoEntityDefaultLocale);
@@ -80,7 +76,7 @@ class SeoService
             }
         }
 
-        $seoEntityInAllLocale = $em->getRepository($this->seoClass)->findOneSeo($seoBaseRoute->getId(), $slug);
+        $seoEntityInAllLocale = $em->getRepository($this->seoClass)->findOneSeo($entityClass, $slug);
         if ($seoEntityInAllLocale) {
             $slugLocale = $this->getSlugLocale($seoEntityInAllLocale, $locale);
             if ($locale != $slugLocale and $slugLocale != $slug and $redirect == true) {

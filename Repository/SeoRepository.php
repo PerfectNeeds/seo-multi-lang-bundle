@@ -7,6 +7,24 @@ use Doctrine\ORM\EntityRepository;
 class SeoRepository extends EntityRepository
 {
 
+    public function findOneBySlugAndEntity($slug, $entity)
+    {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
+        return $this->createQueryBuilder("s")
+            ->leftJoin("s.seoBaseRoute", "sbr")
+            ->andWhere("s.slug = :slug")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
+            ->setParameter("slug", $slug)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
+            ->andWhere("s.deleted = 0")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findBySlugAndBaseRouteAndNotId($seoBaseRouteId, $slug, $seoId)
     {
         return $this->createQueryBuilder("s")
@@ -85,30 +103,40 @@ class SeoRepository extends EntityRepository
             ->getResult();
     }
 
-    public function findOneSeo($seoBaseRouteId, $slug)
+    public function findOneSeo($entity, $slug)
     {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
         return $this->createQueryBuilder("s")
+            ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->andWhere("s.deleted = 0")
-            ->andWhere("s.seoBaseRoute = :seoBaseRouteId")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
             ->andWhere("st.slug = :slug OR s.slug = :slug")
-            ->setParameter("seoBaseRouteId", $seoBaseRouteId)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
             ->setParameter("slug", $slug)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findOneSeoByLocale($seoBaseRouteId, $slug, $locale)
+    public function findOneSeoByLocale($entity, $slug, $locale)
     {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
         return $this->createQueryBuilder("s")
+            ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->leftJoin("st.language", "l")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
             ->andWhere("s.deleted = 0")
-            ->andWhere("s.seoBaseRoute = :seoBaseRouteId")
             ->andWhere("st.slug = :slug OR s.slug = :slug")
             ->andWhere("l.locale = :locale")
-            ->setParameter("seoBaseRouteId", $seoBaseRouteId)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
             ->setParameter("slug", $slug)
             ->setParameter("locale", $locale)
             ->setMaxResults(1)
