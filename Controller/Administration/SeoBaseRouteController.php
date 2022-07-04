@@ -37,13 +37,12 @@ class SeoBaseRouteController extends AbstractController
      */
     public function newAction(
         Request $request,
-        CommonFunctionService $commonFunctionService,
         UserService $userService,
         EntityManagerInterface $em
     ) {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
-        $entities = $this->getEntitiesHasSeoEntity($commonFunctionService);
+        $entities = $this->getEntitiesHasSeoEntity($em);
         $seoBaseRoute = new SeoBaseRoute();
         $form = $this->createForm(SeoBaseRouteType::class, $seoBaseRoute, ["entitiesNames" => $entities]);
         $form->handleRequest($request);
@@ -77,19 +76,19 @@ class SeoBaseRouteController extends AbstractController
     public function editAction(
         Request $request,
         SeoBaseRoute $seoBaseRoute,
-        CommonFunctionService $commonFunctionService,
         UserService $userService,
         EntityManagerInterface $em
     ) {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
-        $entities = $this->getEntitiesHasSeoEntity($commonFunctionService);
+        $entities = $this->getEntitiesHasSeoEntity($em);
         $editForm = $this->createForm(SeoBaseRouteType::class, $seoBaseRoute, ["entitiesNames" => $entities]);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $userName = $userService->getUserName();
             $seoBaseRoute->setModifiedBy($userName);
+            $em->persist($seoBaseRoute);
             $em->flush();
 
             $this->addFlash('success', 'Successfully updated');
@@ -109,8 +108,11 @@ class SeoBaseRouteController extends AbstractController
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="seobaseroute_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request, EntityManagerInterface $em, SeoBaseRouteRepository $baseRouteRepository)
-    {
+    public function dataTableAction(
+        Request $request,
+        EntityManagerInterface $em,
+        SeoBaseRouteRepository $baseRouteRepository
+    ) {
         $srch = $request->query->all("search");
         $start = $request->query->getInt("start");
         $length = $request->query->getInt("length");
@@ -122,6 +124,14 @@ class SeoBaseRouteController extends AbstractController
 
         $count = $baseRouteRepository->filter($search, true);
         $seoBaseRoutes = $baseRouteRepository->filter($search, false, $start, $length);
+        foreach ($seoBaseRoutes as $seoBaseRoute) {
+            $fullEntityName = $this->convertShortEntityNameToFullName($seoBaseRoute->getEntityName());
+            if ($fullEntityName !== null) {
+                $seoBaseRoute->setEntityName($fullEntityName);
+                $em->persist($seoBaseRoute);
+                $em->flush();
+            }
+        }
 
         return $this->render("@PNSeo/Administration/SeoBaseRoute/datatable.json.twig", [
                 "recordsTotal" => $count,
@@ -131,9 +141,44 @@ class SeoBaseRouteController extends AbstractController
         );
     }
 
-    private function getEntitiesHasSeoEntity(CommonFunctionService $commonFunctionService)
+    private function getEntitiesHasSeoEntity(EntityManagerInterface $em)
     {
-        return $commonFunctionService->getEntitiesWithObject('seo', ["SeoSocial"]);
+        $entities = [];
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if (array_key_exists("seo", $m->getAssociationMappings())) {
+                $entityNames = (new \ReflectionClass($m->getName()))->getName();
+                if (!in_array($entityNames, ["SeoSocial"])) {
+                    $entities[$entityNames] = $entityNames;
+                }
+            }
+        }
+
+        return $entities;
     }
 
+    private function convertShortEntityNameToFullName($entityName)
+    {
+        if (substr_count($entityName, '\\') > 0) {
+            return null;
+        }
+        $fullEntityName = null;
+
+        $em = $this->getDoctrine()->getManager();
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if (array_key_exists("seo", $m->getAssociationMappings())) {
+                if (substr($m->getName(), -1 * strlen($entityName) - 1) == '\\'.$entityName) {
+                    $fullEntityName = $m->getName();
+                }
+            }
+
+
+        }
+        if ($fullEntityName != null) {
+            return $fullEntityName;
+        }
+
+        return null;
+    }
 }

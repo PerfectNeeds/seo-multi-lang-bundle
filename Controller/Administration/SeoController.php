@@ -5,6 +5,7 @@ namespace PN\SeoBundle\Controller\Administration;
 use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\SeoBundle\Service\SeoFormTypeService;
+use PN\SeoBundle\Service\SeoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +57,7 @@ class SeoController extends AbstractController
      *
      * @Route("/check-slug", name="fe_check_slug_ajax", methods={"GET"})
      */
-    public function checkSlug(Request $request, SeoFormTypeService $seoFormTypeService, EntityManagerInterface $em)
+    public function checkSlug(Request $request, SeoFormTypeService $seoFormTypeService, SeoService $seoService, EntityManagerInterface $em)
     {
         $seoId = $request->query->get('seoId');
         $seoBaseRouteId = $request->query->get('seoBaseRouteId');
@@ -72,7 +73,7 @@ class SeoController extends AbstractController
         } else {
             $seo = $em->getRepository($this->class)->find($seoId);
             $seo->setSlug($slug);
-            $entity = $seo->getRelationalEntity();
+            $entity = $seoService->getRelationalEntity($seo);
         }
 
         $ifExist = $seoFormTypeService->checkSlugIfExist($seoBaseRoute, $entity, $seo, $locale);

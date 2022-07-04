@@ -6,21 +6,28 @@ use Doctrine\ORM\EntityManagerInterface;
 use PN\SeoBundle\Entity\Seo;
 use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\SeoBundle\Entity\Translation\SeoTranslation;
+use PN\SeoBundle\Repository\SeoBaseRouteRepository;
 use PN\ServiceBundle\Utils\General;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class SeoFormTypeService
 {
 
-    private $em;
+    private EntityManagerInterface $em;
+    private SeoBaseRouteRepository $seoBaseRouteRepository;
     private $seoClass;
     private $defaultLocale;
 
-    public function __construct(EntityManagerInterface $em, ParameterBagInterface $parameterBag)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        ParameterBagInterface $parameterBag,
+        SeoBaseRouteRepository $seoBaseRouteRepository
+    ) {
         $this->em = $em;
         $this->defaultLocale = $parameterBag->get('locale');
         $this->seoClass = $parameterBag->get('pn_seo_class');
+        $this->seoBaseRouteRepository = $seoBaseRouteRepository;
+
     }
 
     public function checkAndGenerateSlug($entity, $seoEntity, $locale = null)
@@ -30,8 +37,7 @@ class SeoFormTypeService
             throw new \Exception('$seoEntity Must be instanceof Seo or SeoTranslation');
         }
 
-        $em = $this->em;
-        $seoBaseRoute = $em->getRepository(SeoBaseRoute::class)->findByEntity($entity);
+        $seoBaseRoute = $this->seoBaseRouteRepository->findByEntity($entity);
 
         if ($locale == null) {
             $locale = $this->defaultLocale;
@@ -62,8 +68,11 @@ class SeoFormTypeService
     {
         $em = $this->em;
         $slug = $this->getSlug($entity, $seoEntity, $this->defaultLocale);
-        if (!method_exists($entity,
-                "getSeo") or $entity->getSeo() == null or $entity->getSeo()->getId() == null) { // new
+        if (
+            !method_exists($entity, "getSeo")
+            or $entity->getSeo() == null
+            or $entity->getSeo()->getId() == null
+        ) { // new
             $checkSeo = $em->getRepository($this->seoClass)->findOneBy(array(
                 'seoBaseRoute' => $seoBaseRoute->getId(),
                 'slug' => $slug,

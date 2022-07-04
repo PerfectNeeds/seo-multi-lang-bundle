@@ -13,6 +13,27 @@ class SeoRepository extends ServiceEntityRepository
         parent::__construct($registry, $class);
     }
 
+    public function findOneBySlugAndEntity(string $slug, object $entity)
+    {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
+        return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
+            ->leftJoin('s.translations', 'st')
+            ->leftJoin("s.seoBaseRoute", "sbr")
+            ->andWhere("s.slug = :slug")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
+            ->setParameter("slug", $slug)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
+            ->andWhere("s.deleted = 0")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findBySlugAndBaseRouteAndNotId($seoBaseRouteId, $slug, $seoId)
     {
         return $this->createQueryBuilder("s")
@@ -89,30 +110,44 @@ class SeoRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneSeo($seoBaseRouteId, $slug)
+    public function findOneSeo($entity, $slug)
     {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
         return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
+            ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->andWhere("s.deleted = 0")
-            ->andWhere("s.seoBaseRoute = :seoBaseRouteId")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
             ->andWhere("st.slug = :slug OR s.slug = :slug")
-            ->setParameter("seoBaseRouteId", $seoBaseRouteId)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
             ->setParameter("slug", $slug)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findOneSeoByLocale($seoBaseRouteId, $slug, $locale)
+    public function findOneSeoByLocale(object $entity, $slug, $locale)
     {
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
         return $this->createQueryBuilder("s")
+            ->addSelect("st")
+            ->addSelect("sbr")
+            ->leftJoin("s.seoBaseRoute", "sbr")
             ->leftJoin("s.translations", "st")
             ->leftJoin("st.language", "l")
+            ->andWhere("sbr.entityName = :entityName OR sbr.entityName = :fullEntityName")
             ->andWhere("s.deleted = 0")
-            ->andWhere("s.seoBaseRoute = :seoBaseRouteId")
             ->andWhere("st.slug = :slug OR s.slug = :slug")
             ->andWhere("l.locale = :locale")
-            ->setParameter("seoBaseRouteId", $seoBaseRouteId)
+            ->setParameter("entityName", $entityName)
+            ->setParameter("fullEntityName", $fullEntityName)
             ->setParameter("slug", $slug)
             ->setParameter("locale", $locale)
             ->setMaxResults(1)
@@ -128,11 +163,14 @@ class SeoRepository extends ServiceEntityRepository
      */
     public function getSeoForSitemap(object $entity): array
     {
-        $entityName = (new \ReflectionClass($entity))->getShortName();
-        $sql = "SELECT s.slug, s.last_modified FROM seo s LEFT JOIN seo_base_route sbr ON sbr.id=s.seo_base_route_id WHERE s.deleted = 0 AND sbr.entity_name=:entityName";
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
+        $sql = "SELECT s.slug, s.last_modified FROM seo s LEFT JOIN seo_base_route sbr ON sbr.id=s.seo_base_route_id WHERE s.deleted = 0 AND (sbr.entity_name=:entityName OR sbr.entity_name=:fullEntityName)";
         $connection = $this->getEntityManager()->getConnection();
         $statement = $connection->prepare($sql);
         $statement->bindValue("entityName", $entityName);
+        $statement->bindValue("fullEntityName", $fullEntityName);
 
         return $statement->executeQuery()->fetchAllAssociative();
     }
@@ -146,15 +184,18 @@ class SeoRepository extends ServiceEntityRepository
      */
     public function getSeoForSitemapByLang(object $entity, string $locale): array
     {
-        $entityName = (new \ReflectionClass($entity))->getShortName();
+        $entityName = (new \ReflectionClass($entity))->getName();
+        $fullEntityName = (new \ReflectionClass($entity))->getShortName();
+
         $sql = "SELECT st.slug, s.last_modified FROM seo_translations st "
             ."LEFT JOIN seo s ON s.id=st.translatable_id "
             ."LEFT JOIN `language` l ON l.id=st.language_id "
             ."LEFT JOIN seo_base_route sbr ON sbr.id=s.seo_base_route_id "
-            ."WHERE s.deleted = 0 AND l.locale=:locale AND sbr.entity_name=:entityName";
+            ."WHERE s.deleted = 0 AND l.locale=:locale AND (sbr.entity_name=:entityName OR sbr.entity_name=:fullEntityName)";
         $connection = $this->getEntityManager()->getConnection();
         $statement = $connection->prepare($sql);
         $statement->bindValue("entityName", $entityName);
+        $statement->bindValue("fullEntityName", $fullEntityName);
         $statement->bindValue("locale", $locale);
 
         return $statement->executeQuery()->fetchAllAssociative();

@@ -80,10 +80,6 @@ abstract class Seo implements Translatable {
      */
     protected $deleted = false;
 
-    /**
-     * @ORM\OneToOne(targetEntity="PN\SeoBundle\Entity\SeoPage", mappedBy="seo")
-     */
-    protected $seoPage;
 
     public function __clone() {
         $this->id = NULL;
@@ -96,21 +92,7 @@ abstract class Seo implements Translatable {
         $this->seoSocials = new ArrayCollection();
         $this->translations = new ArrayCollection();
     }
-
-    public function getRelationalEntity() {
-        $excludeMethods = ['id', 'seoBaseRoute', 'title', "slug", "metaDescription", "focusKeyword", "metaKeyword", "metaTags", "state", "lastModified", "deleted", "seoSocials", "translations", "currentTranslation", "__initializer__", "__isInitialized__", "__cloner__"];
-
-        $allObjects = get_object_vars($this);
-        foreach ($allObjects as $objectName => $objectValue) {
-            if (in_array($objectName, $excludeMethods)) {
-                continue;
-            }
-            if ($objectValue != NULL) {
-                return $objectValue;
-            }
-        }
-        return NULL;
-    }
+    
 
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
@@ -321,28 +303,6 @@ abstract class Seo implements Translatable {
      */
     public function getSeoBaseRoute() {
         return $this->seoBaseRoute;
-    }
-
-    /**
-     * Set seo
-     *
-     * @param \PN\SeoBundle\Entity\SeoPage $seoPage
-     *
-     * @return Seo
-     */
-    public function setSeoPage(\PN\SeoBundle\Entity\SeoPage $seoPage = null) {
-        $this->seoPage = $seoPage;
-
-        return $this;
-    }
-
-    /**
-     * Get seoPage
-     *
-     * @return \PN\SeoBundle\Entity\SeoPage
-     */
-    public function getSeoPage() {
-        return $this->seoPage;
     }
 
     /**

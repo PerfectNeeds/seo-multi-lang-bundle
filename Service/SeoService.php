@@ -34,21 +34,27 @@ class SeoService
         $this->seoClass = $parameterBag->get('pn_seo_class');
     }
 
-    private function checkSlugIfExist(SeoBaseRoute $seoBaseRoute, $slug, $locale = null)
+    public function getRelationalEntity(Seo $seo)
     {
-        $em = $this->em;
+        $fullEntityName = null;
+        $entityName = $seo->getSeoBaseRoute()->getEntityName();
 
+        $convertedEntityName = $this->convertShortEntityNameToFullName($entityName);
+
+        return $this->em->getRepository($convertedEntityName)->findOneBy(["seo" => $seo->getId()]);
+
+    }
+
+    private function checkSlugIfExist(object $entityClass, string $slug, ?string $locale = null)
+    {
         $defaultLocale = $this->parameterBag->get('locale');
         if ($locale == null) {
             $locale = $defaultLocale;
         }
         if ($locale == $defaultLocale) {
-            return $em->getRepository($this->seoClass)->findOneBy([
-                'slug' => $slug,
-                'seoBaseRoute' => $seoBaseRoute->getId(),
-            ]);
+            return $this->em->getRepository($this->seoClass)->findOneBySlugAndEntity($slug, $entityClass);
         } else {
-            return $em->getRepository($this->seoClass)->findOneSeoByLocale($seoBaseRoute->getId(), $slug, $locale);
+            return $this->em->getRepository($this->seoClass)->findOneSeoByLocale($entityClass, $slug, $locale);
         }
     }
 
@@ -57,15 +63,12 @@ class SeoService
         if (!is_object($entityClass)) {
             throw new \Exception("Please enter a entity class");
         }
-        $em = $this->em;
-        $seoBaseRoute = $this->seoBaseRouteRepository->findByEntity($entityClass);
-
         $defaultLocale = $this->parameterBag->get('locale');
         $locale = $request->getLocale();
 
-        $seoEntityDefaultLocale = $this->checkSlugIfExist($seoBaseRoute, $slug, $defaultLocale);
+        $seoEntityDefaultLocale = $this->checkSlugIfExist($entityClass, $slug, $defaultLocale);
         if ($seoEntityDefaultLocale) {
-            $entity = $seoEntityDefaultLocale->getRelationalEntity();
+            $entity = $this->getRelationalEntity($seoEntityDefaultLocale);
             $slugLocale = $this->getSlugLocale($seoEntityDefaultLocale, $locale);
             if ($locale != $defaultLocale and $slugLocale != $slug and $redirect == true) {
                 $newUrl = $this->changeLocaleInURL($request, $locale, $slugLocale, $slueRouteParamName);
@@ -76,7 +79,7 @@ class SeoService
             }
         }
 
-        $seoEntityInAllLocale = $em->getRepository($this->seoClass)->findOneSeo($seoBaseRoute->getId(), $slug);
+        $seoEntityInAllLocale = $this->em->getRepository($this->seoClass)->findOneSeo($entityClass, $slug);
         if ($seoEntityInAllLocale) {
             $slugLocale = $this->getSlugLocale($seoEntityInAllLocale, $locale);
             if ($locale != $slugLocale and $slugLocale != $slug and $redirect == true) {
@@ -84,7 +87,7 @@ class SeoService
 
                 return new RedirectResponse($newUrl, 301);
             } else {
-                return $seoEntityInAllLocale->getRelationalEntity();
+                return $this->getRelationalEntity($seoEntityInAllLocale);
             }
         }
 
@@ -120,4 +123,38 @@ class SeoService
         return $this->router->generate($request->get('_route'), $params);
     }
 
+    /**
+     * convert ShortName to FullEntityName (Product => PN\Bundle\ProductBundle\Entity\Product)
+     * @param $entityName
+     * @return mixed|string
+     * @throws \Exception
+     */
+    private function convertShortEntityNameToFullName($entityName)
+    {
+        if (substr_count($entityName, '\\') > 0) {
+            return $entityName;
+        }
+        $fullEntityName = null;
+        $meta = $this->em->getMetadataFactory()->getAllMetadata();
+        foreach ($meta as $m) {
+            if (array_key_exists("seo", $m->getAssociationMappings())) {
+                if (substr($m->getName(), -1 * strlen($entityName) - 1) == '\\'.$entityName) {
+                    $fullEntityName = $m->getName();
+                }
+            }
+
+
+        }
+        if ($fullEntityName != null) {
+            $seoBaseRoute = $this->seoBaseRouteRepository->findOneBy(["entityName" => $entityName]);
+            if ($seoBaseRoute instanceof SeoBaseRoute) {
+                $seoBaseRoute->setEntityName($fullEntityName);
+                $this->em->persist($seoBaseRoute);
+                $this->em->flush();
+            }
+
+            return $fullEntityName;
+        }
+        throw new \Exception("Can't find FullEntityName '$entityName'");
+    }
 }

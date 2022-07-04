@@ -7,6 +7,7 @@ use PN\LocaleBundle\Form\Type\TranslationsType;
 use PN\SeoBundle\Entity\SeoBaseRoute;
 use PN\SeoBundle\Form\Translation\SeoTranslationType;
 use PN\SeoBundle\Form\Type\SeoSocialsType;
+use PN\SeoBundle\Repository\SeoBaseRouteRepository;
 use PN\SeoBundle\Service\SeoFormTypeService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -21,18 +22,21 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class SeoType extends AbstractType
 {
 
-    protected $em;
-    protected $seoFormTypeService;
-    protected $seoClass;
+    private EntityManagerInterface $em;
+    private SeoFormTypeService $seoFormTypeService;
+    private SeoBaseRouteRepository $seoBaseRouteRepository;
+    private $seoClass;
 
     public function __construct(
         ParameterBagInterface $parameterBag,
         EntityManagerInterface $em,
-        SeoFormTypeService $seoFormTypeService
+        SeoFormTypeService $seoFormTypeService,
+        SeoBaseRouteRepository $seoBaseRouteRepository
     ) {
         $this->seoClass = $parameterBag->get("pn_seo_class");
         $this->em = $em;
         $this->seoFormTypeService = $seoFormTypeService;
+        $this->seoBaseRouteRepository = $seoBaseRouteRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -77,7 +81,7 @@ class SeoType extends AbstractType
         $seoEntity->setSlug($generatedSlug);
 
         if ($seoEntity->getSeoBaseRoute() == null) {
-            $seoBaseRoute = $this->em->getRepository(SeoBaseRoute::class)->findByEntity($parentEntity);
+            $seoBaseRoute = $this->seoBaseRouteRepository->findByEntity($parentEntity);
             $seoEntity->setSeoBaseRoute($seoBaseRoute);
         }
     }

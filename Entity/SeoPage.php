@@ -36,7 +36,7 @@ class SeoPage {
     private $title;
 
     /**
-     * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", inversedBy="seoPage", cascade={"persist", "remove" })
+     * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", cascade={"persist", "remove" }, fetch="EAGER")
      */
     protected $seo;
 
