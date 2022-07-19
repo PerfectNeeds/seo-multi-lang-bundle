@@ -66,7 +66,7 @@ class SeoService
         $defaultLocale = $this->parameterBag->get('locale');
         $locale = $request->getLocale();
 
-        $seoEntityDefaultLocale = $this->checkSlugIfExist($entityClass, $slug, $defaultLocale);
+        $seoEntityDefaultLocale = $this->checkSlugIfExist($entityClass, $slug, $locale);
         if ($seoEntityDefaultLocale) {
             $entity = $this->getRelationalEntity($seoEntityDefaultLocale);
             $slugLocale = $this->getSlugLocale($seoEntityDefaultLocale, $locale);
