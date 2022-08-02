@@ -26,6 +26,7 @@ class Redirect404Controller extends AbstractController
      */
     public function indexAction()
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render('@PNSeo/Administration/Redirect404/index.html.twig');
     }
@@ -37,6 +38,7 @@ class Redirect404Controller extends AbstractController
      */
     public function newAction(Request $request, UserService $userService, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $redirect404 = new Redirect404();
         $form = $this->createForm(Redirect404Type::class, $redirect404);
         $form->handleRequest($request);
@@ -72,7 +74,7 @@ class Redirect404Controller extends AbstractController
         EntityManagerInterface $em
     ) {
 
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $editForm = $this->createForm(Redirect404Type::class, $redirect404);
         $editForm->handleRequest($request);
@@ -101,6 +103,7 @@ class Redirect404Controller extends AbstractController
      */
     public function deleteAction(Request $request, Redirect404 $redirect404, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em->remove($redirect404);
         $em->flush();
 
@@ -112,8 +115,11 @@ class Redirect404Controller extends AbstractController
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="redirect404_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request, EntityManagerInterface $em, Redirect404Repository $redirect404Repository)
-    {
+    public function dataTableAction(
+        Request $request,
+        EntityManagerInterface $em,
+        Redirect404Repository $redirect404Repository
+    ) {
 
         $srch = $request->query->all("search");
         $start = $request->query->getInt("start");
