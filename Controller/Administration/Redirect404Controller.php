@@ -13,14 +13,17 @@ use PN\SeoBundle\Form\Redirect404Type;
  *
  * @Route("/redirect-404")
  */
-class Redirect404Controller extends Controller {
+class Redirect404Controller extends Controller
+{
 
     /**
      * Lists all Redirect404 entities.
      *
      * @Route("/", name="redirect404_index", methods={"GET"})
      */
-    public function indexAction() {
+    public function indexAction()
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render('@PNSeo/Administration/Redirect404/index.html.twig');
     }
@@ -30,7 +33,9 @@ class Redirect404Controller extends Controller {
      *
      * @Route("/new", name="redirect404_new", methods={"GET", "POST"})
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $redirect404 = new Redirect404();
         $form = $this->createForm(Redirect404Type::class, $redirect404);
         $form->handleRequest($request);
@@ -50,8 +55,8 @@ class Redirect404Controller extends Controller {
         }
 
         return $this->render('@PNSeo/Administration/Redirect404/new.html.twig', array(
-                    'redirect404' => $redirect404,
-                    'form' => $form->createView(),
+            'redirect404' => $redirect404,
+            'form' => $form->createView(),
         ));
     }
 
@@ -60,9 +65,10 @@ class Redirect404Controller extends Controller {
      *
      * @Route("/{id}/edit", name="redirect404_edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, Redirect404 $redirect404) {
+    public function editAction(Request $request, Redirect404 $redirect404)
+    {
 
-        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $editForm = $this->createForm(Redirect404Type::class, $redirect404);
         $editForm->handleRequest($request);
@@ -80,8 +86,8 @@ class Redirect404Controller extends Controller {
 
 
         return $this->render('@PNSeo/Administration/Redirect404/edit.html.twig', array(
-                    'redirect404' => $redirect404,
-                    'edit_form' => $editForm->createView(),
+            'redirect404' => $redirect404,
+            'edit_form' => $editForm->createView(),
         ));
     }
 
@@ -90,7 +96,9 @@ class Redirect404Controller extends Controller {
      *
      * @Route("/{id}", name="redirect404_delete", methods={"DELETE"})
      */
-    public function deleteAction(Request $request, Redirect404 $redirect404) {
+    public function deleteAction(Request $request, Redirect404 $redirect404)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $em->remove($redirect404);
         $em->flush();
@@ -103,7 +111,8 @@ class Redirect404Controller extends Controller {
      *
      * @Route("/data/table", defaults={"_format": "json"}, name="redirect404_datatable", methods={"GET"})
      */
-    public function dataTableAction(Request $request) {
+    public function dataTableAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $srch = $request->query->get("search");
@@ -115,14 +124,14 @@ class Redirect404Controller extends Controller {
         $search->string = $srch['value'];
         $search->ordr = $ordr[0];
 
-        $count = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, TRUE);
-        $redirect404s = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, FALSE, $start, $length);
+        $count = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, true);
+        $redirect404s = $em->getRepository('PNSeoBundle:Redirect404')->filter($search, false, $start, $length);
 
         return $this->render('@PNSeo/Administration/Redirect404/datatable.json.twig', array(
-                    "recordsTotal" => $count,
-                    "recordsFiltered" => $count,
-                    "redirect404s" => $redirect404s,
-                        )
+                "recordsTotal" => $count,
+                "recordsFiltered" => $count,
+                "redirect404s" => $redirect404s,
+            )
         );
     }
 
