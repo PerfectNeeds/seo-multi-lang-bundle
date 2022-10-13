@@ -16,17 +16,34 @@ class SeoPageRepository extends ServiceEntityRepository
         parent::__construct($registry, SeoPage::class);
     }
 
-    private function getStatement()
+    public function find($id, $lockMode = null, $lockVersion = null)
     {
-        return $this->createQueryBuilder('t');
+        $statement = $this->getStatement();
+        $statement->andWhere("sp.id=:id")
+            ->setParameter("id", $id);
+
+        return $statement->getQuery()->getOneOrNullResult();
+    }
+
+    private function getStatement(): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')
+            ->addSelect("seo")
+            ->addSelect("seoTrans")
+            ->addSelect("l")
+            ->addSelect("seoSocials")
+            ->leftJoin("sp.seo", "seo")
+            ->leftJoin("seo.translations", "seoTrans")
+            ->leftJoin("seoTrans.language", "l")
+            ->leftJoin("seo.seoSocials", "seoSocials");
     }
 
     private function filterOrder(QueryBuilder $statement, \stdClass $search)
     {
         $sortSQL = [
-            't.id',
-            't.title',
-            't.created',
+            'sp.id',
+            'sp.title',
+            'sp.created',
         ];
 
         if (isset($search->ordr) and Validate::not_null($search->ordr)) {
@@ -43,8 +60,8 @@ class SeoPageRepository extends ServiceEntityRepository
     private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
     {
         if (isset($search->string) and Validate::not_null($search->string)) {
-            $statement->andWhere('t.id LIKE :searchTerm '
-                .'OR t.title LIKE :searchTerm '
+            $statement->andWhere('sp.id LIKE :searchTerm '
+                .'OR sp.title LIKE :searchTerm '
             );
             $statement->setParameter('searchTerm', '%'.trim($search->string).'%');
         }
@@ -61,7 +78,7 @@ class SeoPageRepository extends ServiceEntityRepository
 
     private function filterCount(QueryBuilder $statement)
     {
-        $statement->select("COUNT(DISTINCT t.id)");
+        $statement->select("COUNT(DISTINCT sp.id)");
         $statement->setMaxResults(1);
 
         $count = $statement->getQuery()->getOneOrNullResult();
@@ -77,11 +94,11 @@ class SeoPageRepository extends ServiceEntityRepository
         $statement = $this->getStatement();
         $this->filterWhereClause($statement, $search);
 
-        if ($count == true) {
+        if ($count) {
             return $this->filterCount($statement);
         }
 
-        $statement->groupBy('t.id');
+        $statement->groupBy('sp.id');
         $this->filterPagination($statement, $startLimit, $endLimit);
         $this->filterOrder($statement, $search);
 
