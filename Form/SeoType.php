@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
 use VM5\EntityTranslationsBundle\Form\Type\TranslationsType;
 
@@ -34,11 +35,37 @@ class SeoType extends AbstractType
         $multipleLanguages = $options['multipleLanguages'];
 
         $builder
-            ->add('title', TextType::class, ["constraints" => [new NotNull()], "required" => true])
-            ->add('slug', TextType::class, ["constraints" => [new NotNull()], "required" => true])
+            ->add('title', TextType::class, [
+                "required" => true,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                    new NotNull(),
+                ],
+            ])
+            ->add('slug', TextType::class, [
+                "required" => true,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                    new NotNull(),
+                ],
+            ])
+            ->add('focusKeyword', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
+            ->add('metaKeyword', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
             ->add('metaDescription')
-            ->add('focusKeyword')
-            ->add('metaKeyword')
             ->add('metaTags')
             ->add('state')
             ->add("seoSocials", SeoSocialsType::class, [
