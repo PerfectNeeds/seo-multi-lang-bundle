@@ -7,10 +7,12 @@ use PN\SeoBundle\Service\SeoFormTypeService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class SeoTranslationType extends AbstractType
 {
@@ -19,8 +21,11 @@ class SeoTranslationType extends AbstractType
     private $seoFormTypeService;
     private $seoTranslationClass;
 
-    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $em, SeoFormTypeService $seoFormTypeService)
-    {
+    public function __construct(
+        ParameterBagInterface $parameterBag,
+        EntityManagerInterface $em,
+        SeoFormTypeService $seoFormTypeService
+    ) {
         $this->seoFormTypeService = $seoFormTypeService;
         $this->em = $em;
         $this->seoTranslationClass = $parameterBag->get("pn_seo_translation_class");
@@ -28,11 +33,36 @@ class SeoTranslationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title')
-            ->add('slug')
+        $builder
+            ->add('title', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
+            ->add('slug', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
+            ->add('focusKeyword', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
+            ->add('metaKeyword', TextType::class, [
+                "required" => false,
+                "attr" => ["maxlength" => 255],
+                "constraints" => [
+                    new Length(["max" => 255]),
+                ],
+            ])
             ->add('metaDescription')
-            ->add('focusKeyword')
-            ->add('metaKeyword')
             ->add('metaTags')
             ->add('state');
         $builder->addEventListener(FormEvents::SUBMIT, array($this, 'onSubmit'));
