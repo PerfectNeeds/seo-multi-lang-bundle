@@ -6,7 +6,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PN\SeoBundle\Entity\SeoPage;
-use PN\ServiceBundle\Utils\SQL;
 use PN\ServiceBundle\Utils\Validate;
 
 class SeoPageRepository extends ServiceEntityRepository
@@ -16,7 +15,7 @@ class SeoPageRepository extends ServiceEntityRepository
         parent::__construct($registry, SeoPage::class);
     }
 
-    public function find($id, $lockMode = null, $lockVersion = null)
+    public function find($id, $lockMode = null, $lockVersion = null): ?SeoPage
     {
         $statement = $this->getStatement();
         $statement->andWhere("sp.id=:id")
@@ -38,7 +37,7 @@ class SeoPageRepository extends ServiceEntityRepository
             ->leftJoin("seo.seoSocials", "seoSocials");
     }
 
-    private function filterOrder(QueryBuilder $statement, \stdClass $search)
+    private function filterOrder(QueryBuilder $statement, \stdClass $search): void
     {
         $sortSQL = [
             'sp.id',
@@ -57,7 +56,7 @@ class SeoPageRepository extends ServiceEntityRepository
         }
     }
 
-    private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
+    private function filterWhereClause(QueryBuilder $statement, \stdClass $search): void
     {
         if (isset($search->string) and Validate::not_null($search->string)) {
             $statement->andWhere('sp.id LIKE :searchTerm '
@@ -67,16 +66,15 @@ class SeoPageRepository extends ServiceEntityRepository
         }
     }
 
-    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null)
+    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null): void
     {
-        if ($startLimit === null or $endLimit === null) {
-            return false;
+        if ($startLimit !== null and $endLimit !== null) {
+            $statement->setFirstResult($startLimit)
+                ->setMaxResults($endLimit);
         }
-        $statement->setFirstResult($startLimit)
-            ->setMaxResults($endLimit);
     }
 
-    private function filterCount(QueryBuilder $statement)
+    private function filterCount(QueryBuilder $statement): int
     {
         $statement->select("COUNT(DISTINCT sp.id)");
         $statement->setMaxResults(1);
@@ -89,7 +87,7 @@ class SeoPageRepository extends ServiceEntityRepository
         return 0;
     }
 
-    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    public function filter($search, $count = false, $startLimit = null, $endLimit = null): int|array
     {
         $statement = $this->getStatement();
         $this->filterWhereClause($statement, $search);

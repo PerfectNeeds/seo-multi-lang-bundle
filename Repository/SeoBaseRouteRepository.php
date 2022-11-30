@@ -15,7 +15,7 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
         parent::__construct($registry, SeoBaseRoute::class);
     }
 
-    public function findByEntity($entity, $error = true)
+    public function findByEntity($entity, $error = true): ?SeoBaseRoute
     {
         $entityName = (new \ReflectionClass($entity))->getName();
         $seoBaseRoute = $this->findOneBy(["entityName" => $entityName]);
@@ -31,12 +31,13 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
 
         return $seoBaseRoute;
     }
-    private function getStatement()
+
+    private function getStatement(): QueryBuilder
     {
         return $this->createQueryBuilder('t');
     }
 
-    private function filterOrder(QueryBuilder $statement, \stdClass $search)
+    private function filterOrder(QueryBuilder $statement, \stdClass $search): void
     {
         $sortSQL = [
             't.entityName',
@@ -55,7 +56,7 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
         }
     }
 
-    private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
+    private function filterWhereClause(QueryBuilder $statement, \stdClass $search): void
     {
         if (isset($search->string) and Validate::not_null($search->string)) {
             $statement->andWhere('t.id LIKE :searchTerm '
@@ -66,16 +67,15 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
         }
     }
 
-    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null)
+    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null): void
     {
-        if ($startLimit === null or $endLimit === null) {
-            return false;
+        if ($startLimit !== null and $endLimit !== null) {
+            $statement->setFirstResult($startLimit)
+                ->setMaxResults($endLimit);
         }
-        $statement->setFirstResult($startLimit)
-            ->setMaxResults($endLimit);
     }
 
-    private function filterCount(QueryBuilder $statement)
+    private function filterCount(QueryBuilder $statement): int
     {
         $statement->select("COUNT(DISTINCT t.id)");
         $statement->setMaxResults(1);
@@ -88,7 +88,7 @@ class SeoBaseRouteRepository extends ServiceEntityRepository
         return 0;
     }
 
-    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    public function filter($search, $count = false, $startLimit = null, $endLimit = null): int|array
     {
         $statement = $this->getStatement();
         $this->filterWhereClause($statement, $search);

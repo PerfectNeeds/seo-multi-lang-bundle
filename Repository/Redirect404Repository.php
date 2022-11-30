@@ -6,7 +6,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PN\SeoBundle\Entity\Redirect404;
-use PN\ServiceBundle\Utils\SQL;
 use PN\ServiceBundle\Utils\Validate;
 
 /**
@@ -22,12 +21,12 @@ class Redirect404Repository extends ServiceEntityRepository
         parent::__construct($registry, Redirect404::class);
     }
 
-    private function getStatement()
+    private function getStatement(): QueryBuilder
     {
         return $this->createQueryBuilder('t');
     }
 
-    private function filterOrder(QueryBuilder $statement, \stdClass $search)
+    private function filterOrder(QueryBuilder $statement, \stdClass $search): void
     {
         $sortSQL = [
             't.id',
@@ -36,10 +35,10 @@ class Redirect404Repository extends ServiceEntityRepository
             't.created',
         ];
 
-        if (isset($search->ordr) AND Validate::not_null($search->ordr)) {
+        if (isset($search->ordr) and Validate::not_null($search->ordr)) {
             $dir = $search->ordr['dir'];
             $columnNumber = $search->ordr['column'];
-            if (isset($columnNumber) AND array_key_exists($columnNumber, $sortSQL)) {
+            if (isset($columnNumber) and array_key_exists($columnNumber, $sortSQL)) {
                 $statement->addOrderBy($sortSQL[$columnNumber], $dir);
             }
         } else {
@@ -47,9 +46,9 @@ class Redirect404Repository extends ServiceEntityRepository
         }
     }
 
-    private function filterWhereClause(QueryBuilder $statement, \stdClass $search)
+    private function filterWhereClause(QueryBuilder $statement, \stdClass $search): void
     {
-        if (isset($search->string) AND Validate::not_null($search->string)) {
+        if (isset($search->string) and Validate::not_null($search->string)) {
             $statement->andWhere('t.id LIKE :searchTerm '
                 .'OR t.from LIKE :searchTerm '
                 .'OR t.to LIKE :searchTerm '
@@ -58,16 +57,15 @@ class Redirect404Repository extends ServiceEntityRepository
         }
     }
 
-    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null)
+    private function filterPagination(QueryBuilder $statement, $startLimit = null, $endLimit = null): void
     {
-        if ($startLimit === null OR $endLimit === null) {
-            return false;
+        if ($startLimit !== null and $endLimit !== null) {
+            $statement->setFirstResult($startLimit)
+                ->setMaxResults($endLimit);
         }
-        $statement->setFirstResult($startLimit)
-            ->setMaxResults($endLimit);
     }
 
-    private function filterCount(QueryBuilder $statement)
+    private function filterCount(QueryBuilder $statement): int
     {
         $statement->select("COUNT(DISTINCT t.id)");
         $statement->setMaxResults(1);
@@ -80,12 +78,12 @@ class Redirect404Repository extends ServiceEntityRepository
         return 0;
     }
 
-    public function filter($search, $count = false, $startLimit = null, $endLimit = null)
+    public function filter($search, $count = false, $startLimit = null, $endLimit = null): int|array
     {
         $statement = $this->getStatement();
         $this->filterWhereClause($statement, $search);
 
-        if ($count == true) {
+        if ($count) {
             return $this->filterCount($statement);
         }
 
