@@ -24,6 +24,15 @@ class SeoPageRepository extends ServiceEntityRepository
         return $statement->getQuery()->getOneOrNullResult();
     }
 
+    public function findOneByType($type, $lockMode = null, $lockVersion = null): ?SeoPage
+    {
+        $statement = $this->getStatement();
+        $statement->andWhere("sp.type=:type")
+            ->setParameter("type", $type);
+
+        return $statement->getQuery()->getOneOrNullResult();
+    }
+
     private function getStatement(): QueryBuilder
     {
         return $this->createQueryBuilder('sp')
@@ -60,9 +69,9 @@ class SeoPageRepository extends ServiceEntityRepository
     {
         if (isset($search->string) and Validate::not_null($search->string)) {
             $statement->andWhere('sp.id LIKE :searchTerm '
-                .'OR sp.title LIKE :searchTerm '
+                . 'OR sp.title LIKE :searchTerm '
             );
-            $statement->setParameter('searchTerm', '%'.trim($search->string).'%');
+            $statement->setParameter('searchTerm', '%' . trim($search->string) . '%');
         }
     }
 
