@@ -3,9 +3,9 @@
 <div class="panel panel-flat">
     <div class="panel-body">
         <div class="row">
-            {{ macros.input(edit_form.title) }}
-            {% if edit_form.type is defined %}
-                {{ macros.input(edit_form.type) }}
+            {{ macros.input(form.title) }}
+            {% if form.type is defined %}
+                {{ macros.input(form.type) }}
             {% endif %}
         </div>
     </div>
@@ -13,4 +13,4 @@
         {% include 'adminTemplate/saveAndResetFormFooter.html.twig' %}
     </div>
 </div>
-{% include '@PNSeo/Administration/Seo/seo.html.twig' with { 'seoForm':edit_form.seo, 'entity':seoPage } %}
+{% include '@PNSeo/Administration/Seo/seo.html.twig' with { 'seoForm':form.seo, 'entity':seoPage } %}

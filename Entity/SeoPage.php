@@ -3,12 +3,15 @@
 namespace PN\SeoBundle\Entity;
 
 use App\SeoBundle\Entity\Seo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use PN\LocaleBundle\Model\LocaleTrait;
+use PN\LocaleBundle\Model\Translatable;
 use PN\ServiceBundle\Model\DateTimeTrait;
 use PN\ServiceBundle\Utils\General;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * SeoPage
@@ -22,9 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     message="This type is already exist."
  * )
  */
-class SeoPage
+class SeoPage implements Translatable
 {
-    use DateTimeTrait;
+    use DateTimeTrait,
+        LocaleTrait;
 
     /**
      * @var int
@@ -44,6 +48,11 @@ class SeoPage
     private ?string $title = null;
 
     /**
+     * @ORM\Column(name="brief", type="text", nullable=true)
+     */
+    private ?string $brief = null;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255, unique=true)
@@ -54,6 +63,11 @@ class SeoPage
      * @ORM\OneToOne(targetEntity="\PN\SeoBundle\Entity\Seo", cascade={"persist", "remove" }, fetch="EAGER")
      */
     private ?Seo $seo = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PN\SeoBundle\Entity\Translation\SeoPageTranslation", mappedBy="translatable", cascade={"ALL"}, orphanRemoval=true, fetch="LAZY")
+     */
+    private Collection $translations;
 
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
@@ -73,6 +87,11 @@ class SeoPage
         }
     }
 
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +105,18 @@ class SeoPage
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getBrief(): ?string
+    {
+        return !$this->currentTranslation ? $this->brief : $this->currentTranslation->getBrief();
+    }
+
+    public function setBrief(string $brief): self
+    {
+        $this->brief = $brief;
 
         return $this;
     }

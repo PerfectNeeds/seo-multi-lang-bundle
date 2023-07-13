@@ -12,14 +12,14 @@
 {% endblock %}
 
 {% block body %}
-    {{ form_start(edit_form, {'attr':{"data-toggle":"validator",'novalidate':'novalidate'} }) }}
+    {{ form_start(form, {'attr':{"data-toggle":"validator",'novalidate':'novalidate'} }) }}
     <div class="row">
         <div class="col-md-12">
-            {% set defaultTwig= include ("@PNSeo/Administration/SeoPage/edit_content.html.twig") %}
-            {{ include ("@PNLocale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@PNSeo/Administration/SeoPage/edit_trans.html.twig"} ) }}
+            {% set defaultTwig= include ("@PNSeo/Administration/SeoPage/_form.html.twig") %}
+            {{ include ("@PNLocale/new_or_edit_tab_structure.html.twig", {'defaultTwig': defaultTwig, "transTwigPath" : "@PNSeo/Administration/SeoPage/_form_trans.html.twig"} ) }}
         </div>
     </div>
-    {{ form_end(edit_form) }}
+    {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

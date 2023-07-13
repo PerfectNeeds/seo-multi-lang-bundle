@@ -81,7 +81,7 @@ class SeoPageController extends AbstractController
 
         return $this->render('@PNSeo/Administration/SeoPage/edit.html.twig', array(
             'seoPage' => $seoPage,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
         ));
     }
 
