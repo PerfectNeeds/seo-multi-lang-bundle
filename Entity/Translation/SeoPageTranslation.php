@@ -7,7 +7,8 @@ use PN\LocaleBundle\Model\EditableTranslation;
 use PN\LocaleBundle\Model\TranslationEntity;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Entity
+ * @ORM\Table(name="seo_page_translations")
  */
 class SeoPageTranslation extends TranslationEntity implements EditableTranslation {
 

@@ -4,6 +4,9 @@
     <div class="panel-body">
         <div class="row">
             {{ macros.input(form.title) }}
+            {{ macros.input(form.brief) }}
+        </div>
+        <div class="row">
             {% if form.type is defined %}
                 {{ macros.input(form.type) }}
             {% endif %}

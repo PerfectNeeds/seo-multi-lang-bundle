@@ -5,6 +5,7 @@ namespace PN\SeoBundle\Form\Translation;
 use PN\SeoBundle\Entity\Translation\SeoPageTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class SeoPageTranslationType extends AbstractType
 {

@@ -1,9 +1,12 @@
 {% set seo_form = form.seo %}
 {% set trans_form = form.translations[locale] %}
+
+{% import 'adminTemplate/macros.html.twig' as macros %}
+
 <div class="panel panel-flat">
     <div class="panel-body">
         <div class="row">
-            {{ macros.input(post_form.brief) }}
+            {{ macros.input(trans_form.brief) }}
         </div>
     </div>
     <div class="panel-footer">
