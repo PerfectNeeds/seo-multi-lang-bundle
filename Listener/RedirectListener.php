@@ -25,7 +25,7 @@ class RedirectListener
     {
         if ($event->isMainRequest()) {
             $url = $this->getUrl($event->getRequest());
-            if (strpos($url, "/admin/") === false) {
+            if (strpos($url, "/admin/") === false and strpos($url, "/api/") === false) {
                 $redirectPage = $this->em->getRepository(Redirect404::class)->findOneBy(["from" => $url]);
                 if ($redirectPage) {
                     $event->setResponse(new RedirectResponse($redirectPage->getTo()));
